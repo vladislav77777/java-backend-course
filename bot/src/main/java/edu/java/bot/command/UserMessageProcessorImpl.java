@@ -11,6 +11,7 @@ public class UserMessageProcessorImpl implements UserMessageProcessor {
 
     @Autowired
     private final List<Command> commands;
+    private String unknownText;
 
     public UserMessageProcessorImpl(List<Command> commands) {
         this.commands = commands;
@@ -26,11 +27,12 @@ public class UserMessageProcessorImpl implements UserMessageProcessor {
 
         String messageText = update.message().text();
 
+        unknownText = "Unknown command. Use /help for command list.";
         if (messageText == null || !messageText.startsWith("/")) {
             // Null command or one that starts not from '/', ignore
             return new SendMessage(
                 update.message().chat().id(),
-                "Unknown command. Use /help for command list."
+                    unknownText
             );
         }
 
@@ -46,7 +48,7 @@ public class UserMessageProcessorImpl implements UserMessageProcessor {
         // Unknown team /<command>
         return new SendMessage(
             update.message().chat().id(),
-            "Unknown command. Use /help for command list."
+                unknownText
         );
     }
 }

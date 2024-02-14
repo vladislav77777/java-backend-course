@@ -21,12 +21,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableConfigurationProperties(ApplicationConfig.class)
-public class Telegram_Bot implements Bot {
+public class TelegramBOT implements Bot {
 
     private TelegramBot telegramBot;
 
-    private static final Logger logger = LoggerFactory.getLogger(Telegram_Bot.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(TelegramBOT.class);
 
     @Autowired
     private ApplicationConfig applicationConfig;
@@ -68,9 +67,9 @@ public class Telegram_Bot implements Bot {
         SetMyCommands setMyCommands = new SetMyCommands(commands);
         BaseResponse response = telegramBot.execute(setMyCommands);
         if (response.isOk()) {
-            logger.info("Commands set [MenuButton] successfully");
+            LOGGER.info("Commands set [MenuButton] successfully");
         } else {
-            logger.error("Error setting commands: {}", response.description());
+            LOGGER.error("Error setting commands: {}", response.description());
         }
     }
 
