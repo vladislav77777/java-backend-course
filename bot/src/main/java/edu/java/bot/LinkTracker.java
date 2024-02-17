@@ -1,9 +1,9 @@
 package edu.java.bot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 /* Temporary tracker-DB */
@@ -14,7 +14,7 @@ public class LinkTracker {
     private static Map<Long, List<String>> trackedLinksMap;
 
     public LinkTracker() {
-        trackedLinksMap = new HashMap<>();
+        trackedLinksMap = new ConcurrentHashMap<>();
     }
 
     public static void trackLink(long chatId, String link) {
