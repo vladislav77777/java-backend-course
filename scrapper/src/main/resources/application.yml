@@ -3,7 +3,9 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 10s
-
+  client:
+    gitHub: "https://api.github.com"
+    stackOverflow: "https://api.stackexchange.com/2.3"
 spring:
   application:
     name: scrapper
