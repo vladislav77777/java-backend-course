@@ -1,4 +1,4 @@
-package edu.java.bot;
+package edu.java.bot.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -60,12 +60,9 @@ public class TelegramBOT implements Bot {
     }
 
     private void setMenuButtonCommands() {
-
-        BotCommand[] commands = messageProcessor.commands().stream().map(Command::toApiCommand)
-            .toArray(BotCommand[]::new);
-
-        SetMyCommands setMyCommands = new SetMyCommands(commands);
-        BaseResponse response = telegramBot.execute(setMyCommands);
+        BaseResponse response =
+            telegramBot.execute(new SetMyCommands(messageProcessor.commands().stream().map(Command::toApiCommand)
+                .toArray(BotCommand[]::new)));
         if (response.isOk()) {
             LOGGER.info("Commands set [MenuButton] successfully");
         } else {

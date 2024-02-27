@@ -1,73 +1,62 @@
 package edu.java.bot.command;
 
-import com.pengrad.telegrambot.model.Chat;
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.LinkTracker;
+import edu.java.bot.entity.UserChat;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ListCommandTest {
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ListCommandTest extends CommandTest {
 
     // Class to be tested
     @InjectMocks
     private ListCommand listCommand;
 
-    // Dependencies (will be mocked)
-    @Mock
-    private LinkTracker linkTracker;
-    @Mock
-    private Update update;
-    @Mock
-    private Message message;
-    @Mock
-    private Chat chat;
+    @Test
+    public void assertThatCommandReturnedRightString() {
+        assertEquals("/list", listCommand.command());
+    }
 
-    final long chatId = 123L;
-
-    @BeforeEach
-    void init() {
-//        === when(update.message().chat().id()).thenReturn(chatId);
-        when(update.message()).thenReturn(message);
-        when(message.chat()).thenReturn(chat);
-        when(chat.id()).thenReturn(chatId);
+    @Test
+    public void assertThatDescriptionReturnedRightString() {
+        assertEquals("Show the list of tracked links", listCommand.description());
     }
 
     @Test
     @DisplayName("Check /list command")
-    void handleCommandWithTrackedLinks() {
+    void assertThatHandleCommandWithTrackedLinks() {
         List<String> trackedLinks = List.of("https://example.com", "https://example.org");
-        when(linkTracker.getTrackedLinks(chatId)).thenReturn(trackedLinks);
+        when(repository.findById(chatId)).thenReturn(new UserChat(chatId, trackedLinks));
 
         SendMessage actualResult = listCommand.handle(update);
         String expectedString = expectedResultBuilder();
 
-        Assertions.assertEquals(expectedString, actualResult.getParameters().get("text"));
+        assertEquals(expectedString, actualResult.getParameters().get("text"));
         Assertions.assertEquals(chatId, actualResult.getParameters().get("chat_id")
         );
     }
 
     @Test
     @DisplayName("Check /list command with no links")
-    void handleCommandWithEmptyTrackedLinks() {
+    void assertThatHandleCommandWithEmptyTrackedLinks() {
         List<String> trackedLinks = Collections.emptyList();
-        when(linkTracker.getTrackedLinks(chatId)).thenReturn(trackedLinks);
+        when(repository.findById(chatId)).thenReturn(new UserChat(chatId, trackedLinks));
 
         SendMessage actualResult = listCommand.handle(update);
 
-        Assertions.assertEquals("The list of tracked links is empty.", actualResult.getParameters().get("text"));
-        Assertions.assertEquals(chatId, actualResult.getParameters().get("chat_id"));
+        assertEquals("The list of tracked links is empty.", actualResult.getParameters().get("text"));
+        assertEquals(chatId, actualResult.getParameters().get("chat_id"));
     }
 
     private String expectedResultBuilder() {

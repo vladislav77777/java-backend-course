@@ -7,6 +7,7 @@ import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
 import java.util.List;
+import edu.java.bot.repository.LinkTracker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,23 +26,18 @@ public class CommandConfig {
     }
 
     @Bean
-    public StartCommand startCommand() {
-        return new StartCommand();
+    public StartCommand startCommand(LinkTracker linkTracker) {
+        return new StartCommand(linkTracker);
     }
 
     @Bean
-    public HelpCommand helpCommand() {
-        return new HelpCommand();
+    public TrackCommand trackCommand(LinkTracker linkTracker) {
+        return new TrackCommand(linkTracker);
     }
 
     @Bean
-    public TrackCommand trackCommand() {
-        return new TrackCommand();
-    }
-
-    @Bean
-    public UntrackCommand untrackCommand() {
-        return new UntrackCommand();
+    public UntrackCommand untrackCommand(LinkTracker linkTracker) {
+        return new UntrackCommand(linkTracker);
     }
 
 }
