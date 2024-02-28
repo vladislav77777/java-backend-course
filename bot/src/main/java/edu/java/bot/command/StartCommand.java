@@ -30,8 +30,8 @@ public class StartCommand implements Command {
         if (repository.findById(chat.id()) == null) {
             repository.save(new UserChat(chat.id(), new ArrayList<>()));
         }
-        String TEXT_MESSAGE =
+        String textMessage =
             "Welcome! You are now registered. You can view the available commands using the /help command";
-        return new SendMessage(update.message().chat().id(), TEXT_MESSAGE);
+        return new SendMessage(update.message().chat().id(), textMessage);
     }
 }
