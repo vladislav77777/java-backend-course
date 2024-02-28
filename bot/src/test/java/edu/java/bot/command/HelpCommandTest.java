@@ -19,11 +19,12 @@ public class HelpCommandTest extends CommandTest {
     public void init() {
         super.init();
 
-        helpCommand = new HelpCommand(List.of(new StartCommand(repository),
+        helpCommand = new HelpCommand(List.of(
+            new StartCommand(repository),
             new ListCommand(repository),
             new TrackCommand(repository),
             new UntrackCommand(repository)
-        ));
+        ), repository);
     }
 
     @Test

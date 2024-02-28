@@ -6,12 +6,14 @@ app:
   client:
     gitHub: "https://api.github.com"
     stackOverflow: "https://api.stackexchange.com/2.3"
+    bot: ${BOT_URL:http://localhost:8090}
+
 spring:
   application:
     name: scrapper
 
 server:
   port: 8080
-
+# http://localhost:8080/swagger-ui/index.html
 logging:
   config: classpath:log4j2-plain.xml

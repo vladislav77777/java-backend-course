@@ -46,7 +46,7 @@ public class TrackCommandTest extends CommandTest {
     @Test
     public void assertThatAlreadyAddedLinkReturnedRightResponse() {
         when(message.text()).thenReturn("/track https://www.tinkoff.ru");
-        repository.add(new UserChat(chatId, new ArrayList<>(List.of("https://www.tinkoff.ru"))));
+        repository.save(new UserChat(chatId, new ArrayList<>(List.of("https://www.tinkoff.ru"))));
 
         assertEquals("Link is already tracked", trackCommand.handle(update).getParameters().get("text"));
     }
@@ -54,7 +54,7 @@ public class TrackCommandTest extends CommandTest {
     @Test
     public void assertThatAddUniqueLinkReturnedRightResponse() {
         Mockito.doReturn("/track https://www.tinkoff.ru").when(message).text();
-        repository.add(new UserChat(chatId, new ArrayList<>()));
+        repository.save(new UserChat(chatId, new ArrayList<>()));
 
         assertEquals(
             "Tracking started for the link: " + "https://www.tinkoff.ru",

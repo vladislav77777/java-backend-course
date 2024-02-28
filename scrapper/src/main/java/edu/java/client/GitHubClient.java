@@ -1,6 +1,6 @@
 package edu.java.client;
 
-import edu.java.dto.GitHubResponse;
+import edu.java.entity.dto.GitHubResponse;
 import java.util.Objects;
 
 public class GitHubClient extends Client {

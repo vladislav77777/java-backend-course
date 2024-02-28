@@ -43,7 +43,7 @@ public class UntrackCommandTest extends CommandTest {
     @Test
     public void assertThatUnTrackExistingLinkReturnedRightResponse() {
         when(message.text()).thenReturn("/untrack https://www.tinkoff.ru");
-        repository.add(new UserChat(chatId, new ArrayList<>(List.of("https://www.tinkoff.ru"))));
+        repository.save(new UserChat(chatId, new ArrayList<>(List.of("https://www.tinkoff.ru"))));
 
         assertEquals(
             "Tracking stopped for the link: https://www.tinkoff.ru",
@@ -54,7 +54,7 @@ public class UntrackCommandTest extends CommandTest {
     @Test
     public void assertThatUnTrackNotExistingLinkReturnedRightResponse() {
         when(message.text()).thenReturn("/untrack https://www.tinkoff.ru");
-        repository.add(new UserChat(chatId, new ArrayList<>()));
+        repository.save(new UserChat(chatId, new ArrayList<>()));
 
         assertEquals("Link is not tracked", unTrackCommand.handle(update).getParameters().get("text"));
     }

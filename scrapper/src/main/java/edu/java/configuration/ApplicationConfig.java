@@ -15,6 +15,6 @@ public record ApplicationConfig(
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
 
-    public record LinkClient(String gitHub, String stackOverflow) {
+    public record LinkClient(String gitHub, String stackOverflow, String bot) {
     }
 }

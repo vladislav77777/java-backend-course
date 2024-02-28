@@ -26,6 +26,11 @@ public class TrackCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
+        UserChat userChat = repository.findById(chatId);
+//        if (userChat == null) {
+//            return new SendMessage(chatId, "Please, register -- /start.");
+//        }
+
         String messageText = update.message().text();
         String[] tokens = messageText.split("\\s+");
 
@@ -36,7 +41,6 @@ public class TrackCommand implements Command {
         if (link == null) {
             return new SendMessage(chatId, "Incorrect link");
         }
-        UserChat userChat = repository.findById(chatId);
         List<String> links = userChat.getTrackingLinks();
 
         if (links.contains(link.toString())) {
@@ -45,7 +49,7 @@ public class TrackCommand implements Command {
         }
 
         links.add(link.toString());
-        repository.add(new UserChat(userChat.getChatId(), links));
+        repository.save(new UserChat(userChat.getChatId(), links));
 
         return new SendMessage(update.message().chat().id(), "Tracking started for the link: " + link);
     }

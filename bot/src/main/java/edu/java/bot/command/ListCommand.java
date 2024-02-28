@@ -29,6 +29,10 @@ public class ListCommand implements Command {
     public SendMessage handle(Update update) {
         long chatId = update.message().chat().id();
         UserChat userChat = repository.findById(chatId);
+//        if (userChat == null) {
+//            return new SendMessage(chatId, "Please, register -- /start.");
+//        }
+
         List<String> links = userChat.getTrackingLinks();
 
         if (links.isEmpty()) {
