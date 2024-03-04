@@ -1,7 +1,10 @@
 package edu.java.bot.command;
 
-import java.util.ArrayList;
-import java.util.List;
+import edu.java.bot.entity.dto.AddLinkRequest;
+import edu.java.bot.entity.dto.ApiErrorResponse;
+import edu.java.bot.entity.dto.LinkResponse;
+import edu.java.bot.exception.ApiErrorResponseException;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,6 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -18,6 +23,12 @@ public class TrackCommandTest extends CommandTest {
 
     @InjectMocks
     private TrackCommand trackCommand;
+
+    @Override
+    public void init() {
+        super.init();
+        trackCommand = new TrackCommand(client);
+    }
 
     @Test
     public void assertThatCommandReturnedRightString() {
@@ -45,7 +56,11 @@ public class TrackCommandTest extends CommandTest {
     @Test
     public void assertThatAlreadyAddedLinkReturnedRightResponse() {
         when(message.text()).thenReturn("/track https://www.tinkoff.ru");
-        repository.save(new UserChat(chatId, new ArrayList<>(List.of("https://www.tinkoff.ru"))));
+        ApiErrorResponse mock = Mockito.mock(ApiErrorResponse.class);
+        Mockito.doReturn("Link is already tracked").when(mock).description();
+
+        Mockito.doReturn(Mono.error(new ApiErrorResponseException(mock)))
+            .when(client).addLink(Mockito.any(), Mockito.any());
 
         assertEquals("Link is already tracked", trackCommand.handle(update).getParameters().get("text"));
     }
@@ -53,11 +68,16 @@ public class TrackCommandTest extends CommandTest {
     @Test
     public void assertThatAddUniqueLinkReturnedRightResponse() {
         Mockito.doReturn("/track https://www.tinkoff.ru").when(message).text();
-        repository.save(new UserChat(chatId, new ArrayList<>()));
+
+        AddLinkRequest request = Mockito.spy(new AddLinkRequest(URI.create("https://www.tinkoff.ru")));
+
+        Mockito.doReturn(Mono.just(ResponseEntity.ok().body(new LinkResponse(0L, request.link()))))
+            .when(client).addLink(Mockito.any(), Mockito.any());
 
         assertEquals(
             "Tracking started for the link: " + "https://www.tinkoff.ru",
             trackCommand.handle(update).getParameters().get("text")
         );
+
     }
 }

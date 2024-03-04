@@ -20,6 +20,7 @@ public class ScrapperClient extends Client {
         super(baseUrl);
     }
 
+
     public Mono<ResponseEntity<Void>> registerChat(Long tgChatId) {
         return webClient.post()
             .uri(TG_CHAT_CONTROLLER_URI, tgChatId)

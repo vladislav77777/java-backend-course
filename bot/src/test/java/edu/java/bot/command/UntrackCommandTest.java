@@ -1,13 +1,18 @@
 package edu.java.bot.command;
 
-import java.util.ArrayList;
-import java.util.List;
+import edu.java.bot.entity.dto.ApiErrorResponse;
+import edu.java.bot.entity.dto.LinkResponse;
+import edu.java.bot.exception.ApiErrorResponseException;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +21,12 @@ import static org.mockito.Mockito.when;
 public class UntrackCommandTest extends CommandTest {
     @InjectMocks
     private UntrackCommand unTrackCommand;
+
+    @Override
+    public void init() {
+        super.init();
+        unTrackCommand = new UntrackCommand(client);
+    }
 
     @Test
     public void assertThatCommandReturnedRightString() {
@@ -41,9 +52,10 @@ public class UntrackCommandTest extends CommandTest {
 
     @Test
     public void assertThatUnTrackExistingLinkReturnedRightResponse() {
-        when(message.text()).thenReturn("/untrack https://www.tinkoff.ru");
-        repository.save(new UserChat(chatId, new ArrayList<>(List.of("https://www.tinkoff.ru"))));
-
+        Mockito.doReturn("/untrack https://www.tinkoff.ru").when(message).text();
+        URI uri = Mockito.spy(URI.create("https://www.tinkoff.ru"));
+        Mockito.doReturn(Mono.just(ResponseEntity.ok().body(new LinkResponse(0L, uri)))).when(client)
+            .removeLink(Mockito.any(), Mockito.any());
         assertEquals(
             "Tracking stopped for the link: https://www.tinkoff.ru",
             unTrackCommand.handle(update).getParameters().get("text")
@@ -53,8 +65,11 @@ public class UntrackCommandTest extends CommandTest {
     @Test
     public void assertThatUnTrackNotExistingLinkReturnedRightResponse() {
         when(message.text()).thenReturn("/untrack https://www.tinkoff.ru");
-        repository.save(new UserChat(chatId, new ArrayList<>()));
 
+        ApiErrorResponse mock = Mockito.mock(ApiErrorResponse.class);
+        Mockito.doReturn("Link is not tracked").when(mock).description();
+        Mockito.doReturn(Mono.error(new ApiErrorResponseException(mock))).when(client)
+            .removeLink(Mockito.any(), Mockito.any());
         assertEquals("Link is not tracked", unTrackCommand.handle(update).getParameters().get("text"));
     }
 }

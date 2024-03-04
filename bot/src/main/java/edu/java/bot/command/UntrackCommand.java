@@ -7,13 +7,12 @@ import edu.java.bot.entity.dto.RemoveLinkRequest;
 import edu.java.bot.exception.ApiErrorResponseException;
 import edu.java.bot.util.LinkUtil;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class UntrackCommand implements Command {
+public class    UntrackCommand implements Command {
     private final ScrapperClient client;
 
     @Override

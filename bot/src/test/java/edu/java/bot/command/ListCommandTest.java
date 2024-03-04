@@ -1,7 +1,9 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.request.SendMessage;
-
+import edu.java.bot.entity.dto.LinkResponse;
+import edu.java.bot.entity.dto.ListLinksResponse;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -12,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +26,12 @@ class ListCommandTest extends CommandTest {
     // Class to be tested
     @InjectMocks
     private ListCommand listCommand;
+
+    @Override
+    public void init() {
+        super.init();
+        listCommand = new ListCommand(client);
+    }
 
     @Test
     public void assertThatCommandReturnedRightString() {
@@ -36,8 +46,12 @@ class ListCommandTest extends CommandTest {
     @Test
     @DisplayName("Check /list command")
     void assertThatHandleCommandWithTrackedLinks() {
-        List<String> trackedLinks = List.of("https://example.com", "https://example.org");
-        when(repository.findById(chatId)).thenReturn(new UserChat(chatId, trackedLinks));
+        List<LinkResponse> trackedLinks = List.of(
+            new LinkResponse(1L, URI.create("https://example.com")),
+            new LinkResponse(2L, URI.create("https://example.org"))
+        );
+        when(client.getAllLinksForChat(chatId)).thenReturn(Mono.just(ResponseEntity.ok()
+            .body(new ListLinksResponse(trackedLinks, 2))));
 
         SendMessage actualResult = listCommand.handle(update);
         String expectedString = expectedResultBuilder();
@@ -50,8 +64,8 @@ class ListCommandTest extends CommandTest {
     @Test
     @DisplayName("Check /list command with no links")
     void assertThatHandleCommandWithEmptyTrackedLinks() {
-        List<String> trackedLinks = Collections.emptyList();
-        when(repository.findById(chatId)).thenReturn(new UserChat(chatId, trackedLinks));
+        when(client.getAllLinksForChat(chatId)).thenReturn(Mono.just(ResponseEntity.ok()
+            .body(new ListLinksResponse(Collections.emptyList(), 0))));
 
         SendMessage actualResult = listCommand.handle(update);
 
