@@ -48,7 +48,7 @@ public class ScrapperClient extends Client {
             .header(TG_CHAT_ID_HEADER, tgChatId.toString())
             .retrieve()
             .onStatus(
-                HttpStatus.BAD_REQUEST::equals,
+                statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
             .toEntity(ListLinksResponse.class);
@@ -61,7 +61,7 @@ public class ScrapperClient extends Client {
             .bodyValue(request)
             .retrieve()
             .onStatus(
-                HttpStatus.BAD_REQUEST::equals,
+                statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
             .toEntity(LinkResponse.class);
