@@ -1,7 +1,7 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.UserChat;
+
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

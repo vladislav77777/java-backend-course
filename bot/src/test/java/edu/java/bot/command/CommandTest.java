@@ -3,7 +3,6 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.repository.LinkTrackerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Spy;
 import static org.mockito.Mockito.when;

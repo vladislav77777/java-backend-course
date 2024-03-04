@@ -1,6 +1,5 @@
 package edu.java.bot.command;
 
-import edu.java.bot.entity.UserChat;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
