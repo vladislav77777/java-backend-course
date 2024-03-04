@@ -2,22 +2,21 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.LinkTracker;
+import edu.java.bot.client.ScrapperClient;
+import edu.java.bot.entity.dto.LinkResponse;
+import edu.java.bot.exception.ApiErrorResponseException;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-
-
+import reactor.core.publisher.Mono;
 
 @Component
+@RequiredArgsConstructor
 public class ListCommand implements Command {
 
-    private final LinkTracker linkTracker;
-
-    @Autowired
-    public ListCommand(LinkTracker linkTracker) {
-        this.linkTracker = linkTracker;
-    }
+    private final ScrapperClient client;
 
     @Override
     public String command() {
@@ -32,17 +31,38 @@ public class ListCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         long chatId = update.message().chat().id();
+        return new SendMessage(chatId, getResponseMessage(chatId))
+            .disableWebPagePreview(true);
+    }
 
-        List<String> trackedLinks = linkTracker.getTrackedLinks(chatId);
+    private String getResponseMessage(Long chatId) {
+        return client.getAllLinksForChat(chatId)
+            .map(response -> {
+                if (HttpStatus.OK.equals(response.getStatusCode())
+                    && response.getBody() != null && response.getBody().links() != null) {
+                    if (response.getBody().links().isEmpty()) {
+                        return "The list of tracked links is empty.";
+                    }
 
-        if (trackedLinks.isEmpty()) {
-            return new SendMessage(chatId, "The list of tracked links is empty.");
-        } else {
-            StringBuilder message = new StringBuilder("Tracked Links:\n");
-            for (String link : trackedLinks) {
-                message.append(link).append("\n");
-            }
-            return new SendMessage(chatId, message.toString());
+                    return buildListOfLinks(response.getBody().links());
+                }
+
+                return "Something went wrong :(";
+            })
+            .onErrorResume(
+                ApiErrorResponseException.class,
+                error -> Mono.just(error.getApiErrorResponse().description())
+            )
+            .block();
+    }
+
+    @NotNull private static String buildListOfLinks(List<LinkResponse> links) {
+        List<String> urls = links.stream().map(linkResponse -> linkResponse.url().toString()).toList();
+
+        StringBuilder message = new StringBuilder("Tracked Links:\n");
+        for (String link : urls) {
+            message.append(link).append("\n");
         }
+        return message.toString();
     }
 }

@@ -2,9 +2,18 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.LinkTracker;
+import edu.java.bot.client.ScrapperClient;
+import edu.java.bot.entity.dto.AddLinkRequest;
+import edu.java.bot.exception.ApiErrorResponseException;
+import edu.java.bot.util.LinkUtil;
+import java.net.URI;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import reactor.core.publisher.Mono;
 
+@RequiredArgsConstructor
 public class TrackCommand implements Command {
+    private final ScrapperClient client;
 
     @Override
     public String command() {
@@ -18,16 +27,38 @@ public class TrackCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
+        Long chatId = update.message().chat().id();
+
         String messageText = update.message().text();
         String[] tokens = messageText.split("\\s+");
 
         if (tokens.length < 2) {
             return new SendMessage(update.message().chat().id(), "Please provide a link to track.");
         }
+        URI link = LinkUtil.parse(tokens[1]);
+        if (link == null) {
+            return new SendMessage(chatId, "Incorrect link");
+        }
 
-        String link = tokens[1];
-        LinkTracker.trackLink(update.message().chat().id(), link);
+        return new SendMessage(chatId, getResponseMessage(chatId, link))
+            .disableWebPagePreview(true);
+    }
 
-        return new SendMessage(update.message().chat().id(), "Tracking started for the link: " + link);
+    private String getResponseMessage(Long chatId, URI link) {
+        return client.addLink(chatId, new AddLinkRequest(link))
+            .map(response -> {
+                if (HttpStatus.OK.equals(response.getStatusCode())
+                    && response.getBody() != null) {
+                    return "Tracking started for the link: %s"
+                        .formatted(response.getBody().url());
+                }
+
+                return "Something went wrong :(";
+            })
+            .onErrorResume(
+                ApiErrorResponseException.class,
+                error -> Mono.just(error.getApiErrorResponse().description())
+            )
+            .block();
     }
 }

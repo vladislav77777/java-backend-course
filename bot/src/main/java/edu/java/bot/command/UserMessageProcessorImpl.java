@@ -32,7 +32,7 @@ public class UserMessageProcessorImpl implements UserMessageProcessor {
             // Null command or one that starts not from '/', ignore
             return new SendMessage(
                 update.message().chat().id(),
-                    unknownText
+                unknownText
             );
         }
 
@@ -48,7 +48,7 @@ public class UserMessageProcessorImpl implements UserMessageProcessor {
         // Unknown team /<command>
         return new SendMessage(
             update.message().chat().id(),
-                unknownText
+            unknownText
         );
     }
 }

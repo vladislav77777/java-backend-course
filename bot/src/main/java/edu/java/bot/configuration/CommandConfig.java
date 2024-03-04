@@ -1,12 +1,9 @@
 package edu.java.bot.configuration;
 
-import edu.java.bot.command.Command;
-import edu.java.bot.command.HelpCommand;
-import edu.java.bot.command.ListCommand;
+import edu.java.bot.client.ScrapperClient;
 import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,34 +11,18 @@ import org.springframework.context.annotation.Configuration;
 public class CommandConfig {
 
     @Bean
-    public List<Command> commands(
-        StartCommand startCommand,
-        HelpCommand helpCommand,
-        TrackCommand trackCommand,
-        UntrackCommand untrackCommand,
-        ListCommand listCommand
-    ) {
-        return List.of(startCommand, helpCommand, trackCommand, untrackCommand, listCommand);
+    public StartCommand startCommand(ScrapperClient client) {
+        return new StartCommand(client);
     }
 
     @Bean
-    public StartCommand startCommand() {
-        return new StartCommand();
+    public TrackCommand trackCommand(ScrapperClient client) {
+        return new TrackCommand(client);
     }
 
     @Bean
-    public HelpCommand helpCommand() {
-        return new HelpCommand();
-    }
-
-    @Bean
-    public TrackCommand trackCommand() {
-        return new TrackCommand();
-    }
-
-    @Bean
-    public UntrackCommand untrackCommand() {
-        return new UntrackCommand();
+    public UntrackCommand untrackCommand(ScrapperClient client) {
+        return new UntrackCommand(client);
     }
 
 }

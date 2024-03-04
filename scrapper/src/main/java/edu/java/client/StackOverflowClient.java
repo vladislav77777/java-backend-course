@@ -1,6 +1,6 @@
 package edu.java.client;
 
-import edu.java.dto.StackOverflowResponse;
+import edu.java.entity.dto.StackOverflowResponse;
 import java.util.Objects;
 
 public class StackOverflowClient extends Client {
