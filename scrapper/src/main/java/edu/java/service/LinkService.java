@@ -25,8 +25,8 @@ public class LinkService {
 
     public ListLinksResponse getAllLinksForChat(Long tgChatId) {
         List<LinkResponse> linksResponses = getTelegramChatById(tgChatId)
-            .getLinks().stream()
-            .map(link -> new LinkResponse(link.getId(), link.getUrl()))
+            .links().stream()
+            .map(link -> new LinkResponse(link.id(), link.url()))
             .toList();
 
         return new ListLinksResponse(linksResponses, linksResponses.size());
@@ -34,32 +34,34 @@ public class LinkService {
 
     public LinkResponse addLinkForChat(Long tgChatId, AddLinkRequest request) {
         TelegramChat telegramChat = getTelegramChatById(tgChatId);
-        List<Link> chatLinks = new ArrayList<>(telegramChat.getLinks());
+        List<Link> chatLinks = new ArrayList<>(telegramChat.links());
 
-        if (chatLinks.stream().anyMatch(link -> link.getUrl().equals(request.link()))) {
+        if (chatLinks.stream().anyMatch(link -> link.url().equals(request.link()))) {
             throw new LinkAlreadyTrackingException(tgChatId, request.link());
         }
 
         Link link = linkRepository.findByUrl(request.link())
-            .orElse(linkRepository.save(new Link(new Random().nextLong(), request.link())));
+            .orElse(linkRepository.save(new Link()
+                .id(new Random().nextLong())
+                .url(request.link())));
         chatLinks.add(link);
-        telegramChat.setLinks(chatLinks);
+        telegramChat.links(chatLinks);
         chatRepository.save(telegramChat);
 
-        return new LinkResponse(link.getId(), link.getUrl());
+        return new LinkResponse(link.id(), link.url());
     }
 
     public LinkResponse removeLinkForChat(Long tgChatId, RemoveLinkRequest request) {
         TelegramChat telegramChat = getTelegramChatById(tgChatId);
-        ArrayList<Link> chatLinks = new ArrayList<>(telegramChat.getLinks());
+        ArrayList<Link> chatLinks = new ArrayList<>(telegramChat.links());
 
         for (Link chatLink : chatLinks) {
-            if (chatLink.getUrl().equals(request.link())) {
+            if (chatLink.url().equals(request.link())) {
                 chatLinks.remove(chatLink);
-                telegramChat.setLinks(chatLinks);
+                telegramChat.links(chatLinks);
                 chatRepository.save(telegramChat);
 
-                return new LinkResponse(chatLink.getId(), chatLink.getUrl());
+                return new LinkResponse(chatLink.id(), chatLink.url());
             }
         }
 

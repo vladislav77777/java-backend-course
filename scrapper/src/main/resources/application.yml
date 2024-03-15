@@ -8,6 +8,9 @@ app:
     stackOverflow: "https://api.stackexchange.com/2.3"
     bot: ${BOT_URL:http://localhost:8090}
 
+  debug-information:
+    api-error-response-stack-trace-list-length: 5
+
 spring:
   application:
     name: scrapper

@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS link
     last_updated_at TIMESTAMP WITH TIME ZONE,
                                   PRIMARY KEY (id)
     );
-
 --changeset vladislav77777:3
 CREATE TABLE IF NOT EXISTS assignment
 (
@@ -45,11 +44,12 @@ CREATE TABLE IF NOT EXISTS assignment
     telegram_chat
 (
     id
-),
+) ON DELETE CASCADE,
     link_id BIGINT REFERENCES link
 (
     id
-),
+)
+  ON DELETE CASCADE,
     PRIMARY KEY
 (
     chat_id,
