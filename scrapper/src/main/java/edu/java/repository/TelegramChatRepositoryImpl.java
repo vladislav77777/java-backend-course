@@ -19,14 +19,14 @@ public class TelegramChatRepositoryImpl implements TelegramChatRepository {
 
     @Override
     public TelegramChat save(TelegramChat telegramChat) {
-        repository.put(telegramChat.getId(), telegramChat);
+        repository.put(telegramChat.id(), telegramChat);
 
         return telegramChat;
     }
 
     @Override
     public void delete(TelegramChat telegramChat) {
-        repository.remove(telegramChat.getId());
+        repository.remove(telegramChat.id());
     }
 }
 

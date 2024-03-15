@@ -8,9 +8,18 @@ app:
     stackOverflow: "https://api.stackexchange.com/2.3"
     bot: ${BOT_URL:http://localhost:8090}
 
+  debug-information:
+    api-error-response-stack-trace-list-length: 5
+
 spring:
   application:
     name: scrapper
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/scrapper}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  liquibase:
+    enabled: false
 
 server:
   port: 8080

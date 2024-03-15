@@ -14,13 +14,13 @@ public class LinkRepositoryImpl implements LinkRepository {
     @Override
     public Optional<Link> findByUrl(URI url) {
         return repository.values().stream()
-            .filter(linkUrl -> linkUrl.getUrl().equals(url))
+            .filter(linkUrl -> linkUrl.url().equals(url))
             .findFirst();
     }
 
     @Override
     public Link save(Link link) {
-        repository.put(link.getId(), link);
+        repository.put(link.id(), link);
 
         return link;
     }
