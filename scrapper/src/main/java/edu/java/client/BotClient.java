@@ -13,7 +13,7 @@ public class BotClient extends Client {
     }
 
     public ResponseEntity<Void> sendUpdate(LinkUpdateRequest request) {
-        System.out.println("Heeere");
+//        System.out.println("Heeere");
         return webClient.post()
             .uri("/updates")
             .bodyValue(request)

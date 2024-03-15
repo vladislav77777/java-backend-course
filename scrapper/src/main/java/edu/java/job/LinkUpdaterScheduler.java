@@ -39,10 +39,7 @@ public class LinkUpdaterScheduler {
                         )).block();
                     if (s != null) {
                         botClient.sendUpdate(s);
-                    } else {
-                        System.out.println("NULLLL");
                     }
-
                     linkService.updateLink(link.setLastUpdatedAt(OffsetDateTime.now()));
 
                     break;

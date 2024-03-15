@@ -3,7 +3,6 @@ package edu.java.util.client;
 import edu.java.client.GitHubClient;
 import edu.java.entity.Link;
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
@@ -37,18 +36,11 @@ public class GitHubClientProcessor extends BaseClientProcessor {
                     Long.parseLong(matcher.group("issueNumber"))
                 )
                 .mapNotNull(response -> {
-
-                    System.out.println(response.getUpdatedAt());
-                    System.out.println(link.getLastUpdatedAt());
-                    System.out.println(OffsetDateTime.now());
-
-                    System.out.println(response.getUpdatedAt().isAfter(link.getLastUpdatedAt()));
-
                     if (response.getUpdatedAt().isAfter(link.getLastUpdatedAt())) {
-                        System.out.println("rep updated");
+
                         return "Repository updated";
                     }
-                    System.out.println("null value");
+
                     return null;
                 });
         }
