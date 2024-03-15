@@ -13,7 +13,11 @@ public record ApplicationConfig(
     LinkClient client,
     DebugInformation debugInformation
 ) {
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    public record Scheduler(
+        boolean enable,
+        @NotNull Duration interval,
+        @NotNull Duration forceCheckDelay,
+        @NotNull Duration linkLastCheckInterval) {
     }
 
     public record LinkClient(String gitHub, String stackOverflow, String bot) {

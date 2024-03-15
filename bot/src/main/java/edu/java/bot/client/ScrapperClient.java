@@ -20,7 +20,6 @@ public class ScrapperClient extends Client {
         super(baseUrl);
     }
 
-
     public Mono<ResponseEntity<Void>> registerChat(Long tgChatId) {
         return webClient.post()
             .uri(TG_CHAT_CONTROLLER_URI, tgChatId)
@@ -62,7 +61,8 @@ public class ScrapperClient extends Client {
             .bodyValue(request)
             .retrieve()
             .onStatus(
-                statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
+                statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode) ||
+                    HttpStatus.NOT_ACCEPTABLE.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
             .toEntity(LinkResponse.class);

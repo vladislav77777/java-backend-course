@@ -26,7 +26,7 @@ public class GitHubController {
         @PathVariable String repo,
         @PathVariable long issueNumber
     ) {
-        return gitHubIssueClient.getIssue(owner, repo, issueNumber);
+        return gitHubIssueClient.getIssue(owner, repo, issueNumber).block();
     }
 }
 

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class    UntrackCommand implements Command {
+public class UntrackCommand implements Command {
     private final ScrapperClient client;
 
     @Override
