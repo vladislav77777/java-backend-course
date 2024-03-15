@@ -9,8 +9,6 @@ import edu.java.entity.dto.RemoveLinkRequest;
 import edu.java.exception.LinkAlreadyTrackingException;
 import edu.java.exception.LinkNotTrackingException;
 import edu.java.exception.TelegramChatNotExistsException;
-import edu.java.repository.LinkRepository;
-import edu.java.repository.TelegramChatRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

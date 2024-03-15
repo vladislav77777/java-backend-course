@@ -4,7 +4,6 @@ import edu.java.entity.TelegramChat;
 import edu.java.entity.dto.ChatOperationResponse;
 import edu.java.exception.TelegramChatAlreadyRegistered;
 import edu.java.exception.TelegramChatNotExistsException;
-import edu.java.repository.TelegramChatRepository;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
