@@ -54,7 +54,7 @@ public class BotClientTest {
                 """.formatted(request.id(), request.url(), request.description(), request.tgChatIds().getFirst())))
             .willReturn(WireMock.ok()));
 
-        ResponseEntity<Void> response = client.sendUpdate(request).block();
+        ResponseEntity<Void> response = client.sendUpdate(request);
 
         Objects.requireNonNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -2,6 +2,7 @@ package edu.java.client;
 
 import edu.java.entity.dto.StackOverflowResponse;
 import java.util.Objects;
+import reactor.core.publisher.Mono;
 
 public class StackOverflowClient extends Client {
 
@@ -9,14 +10,13 @@ public class StackOverflowClient extends Client {
         super(url);
     }
 
-    public StackOverflowResponse fetchQuestion(long questionId) {
+    public Mono<StackOverflowResponse> fetchQuestion(long questionId) {
         return Objects.requireNonNull(webClient.get()
             .uri(
-                "/questions/{questionId}/answers?site=stackoverflow&filter=withbody",
+                "/questions/{questionId}?site=stackoverflow&filter=withbody",
                 questionId
             )
             .retrieve()
-            .bodyToMono(StackOverflowResponse.class)
-            .block());
+            .bodyToMono(StackOverflowResponse.class));
     }
 }

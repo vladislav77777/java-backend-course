@@ -17,11 +17,11 @@ public class TelegramChatController {
 
     @PostMapping("/{id}")
     public ChatOperationResponse registerChat(@PathVariable Long id) {
-        return chatService.registerChat(id);
+        return chatService.register(id);
     }
 
     @DeleteMapping("/{id}")
     public ChatOperationResponse deleteChat(@PathVariable Long id) {
-        return chatService.deleteChat(id);
+        return chatService.unregister(id);
     }
 }

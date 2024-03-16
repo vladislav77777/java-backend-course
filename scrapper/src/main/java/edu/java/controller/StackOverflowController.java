@@ -22,6 +22,6 @@ public class StackOverflowController {
 
     @GetMapping("/question/{questionId}")
     public StackOverflowResponse getQuestion(@PathVariable long questionId) {
-        return stackOverflowClient.fetchQuestion(questionId);
+        return stackOverflowClient.fetchQuestion(questionId).block();
     }
 }
