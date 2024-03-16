@@ -19,7 +19,7 @@ public record StackOverflowResponse(@JsonProperty("items") List<ItemResponse> it
 
         @JsonIgnoreProperties(ignoreUnknown = true)
         public record Owner(
-            @JsonProperty("account_id") long accountId
+            @JsonProperty("display_name") String display_name
         ) {
         }
 

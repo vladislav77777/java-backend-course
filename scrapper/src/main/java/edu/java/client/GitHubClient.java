@@ -13,10 +13,10 @@ public class GitHubClient extends Client {
     public Mono<GitHubResponse> getIssue(String owner, String repo, long issueNumber) {
         return Objects.requireNonNull(webClient.get()
             .uri("/repos/{owner}/{repo}/issues/{issueNumber}", owner, repo, issueNumber)
-            .header(
-                "Authorization",
-                "token " + "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"
-            ) //  Authorization с токеном доступа
+//            .header(
+//                "Authorization",
+//                "token " + "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"
+//            ) //  Authorization с токеном доступа
             .retrieve()
             .bodyToMono(GitHubResponse.class));
     }
