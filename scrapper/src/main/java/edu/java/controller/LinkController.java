@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/links")
 @RequiredArgsConstructor
 public class LinkController {
-    private final LinkService linkService;
+    private final LinkService jooqLinkService;
 
     @GetMapping
     public ListLinksResponse getAllLinks(@RequestHeader("Tg-Chat-Id") Long tgChatId) {
-        return linkService.listAllForChat(tgChatId);
+        return jooqLinkService.listAllForChat(tgChatId);
     }
 
     @PostMapping
     public LinkResponse addLink(@RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody AddLinkRequest request) {
-        return linkService.add(tgChatId, request.link());
+        return jooqLinkService.add(tgChatId, request.link());
     }
 
     @DeleteMapping
     public LinkResponse removeLink(@RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody RemoveLinkRequest request) {
-        return linkService.remove(tgChatId, request.link());
+        return jooqLinkService.remove(tgChatId, request.link());
     }
 }

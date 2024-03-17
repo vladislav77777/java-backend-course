@@ -1,8 +1,8 @@
-package edu.java.repository.jdbc;
+package edu.java.repository;
 
 import java.util.Collection;
 
-public interface JdbcRepository<T> {
+public interface EntityRepository<T> {
     T add(T entity);
 
     T remove(T entity);

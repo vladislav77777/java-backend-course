@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler {
     private final List<BaseClientProcessor> clientProcessors;
-    private final LinkService linkService;
+    private final LinkService jooqLinkService;
     private final BotClient botClient;
     private final ApplicationConfig config;
 
@@ -26,7 +26,7 @@ public class LinkUpdaterScheduler {
     public void update() {
         log.info("Update method was invoked");
 
-        linkService.listAllWithInterval(config.scheduler().linkLastCheckInterval()).forEach(link -> {
+        jooqLinkService.listAllWithInterval(config.scheduler().linkLastCheckInterval()).forEach(link -> {
             for (BaseClientProcessor clientProcessor : clientProcessors) {
                 if (clientProcessor.isCandidate(link.getUrl())) {
                     LinkUpdateRequest s = clientProcessor.getUpdate(link)
@@ -35,12 +35,12 @@ public class LinkUpdaterScheduler {
                             link.getId(),
                             link.getUrl(),
                             update,
-                            linkService.getAllChatsForLink(link.getId())
+                            jooqLinkService.getAllChatsForLink(link.getId())
                         )).block();
                     if (s != null) {
                         botClient.sendUpdate(s);
                     }
-                    linkService.updateLink(link.setLastUpdatedAt(OffsetDateTime.now()));
+                    jooqLinkService.updateLink(link.setLastUpdatedAt(OffsetDateTime.now()));
 
                     break;
                 }

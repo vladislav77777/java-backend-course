@@ -1,6 +1,7 @@
 package edu.java.repository.jdbc;
 
 import edu.java.entity.Link;
+import edu.java.repository.EntityRepository;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcLinkRepository implements JdbcRepository<Link> {
+public class JdbcLinkRepository implements EntityRepository<Link> {
     private static final String ADD_QUERY = "INSERT INTO link (url, last_updated_at) VALUES (?, ?) RETURNING *";
     private static final String DELETE_QUERY = "DELETE FROM link WHERE id=? RETURNING *";
     private static final String SELECT_ALL = "SELECT * FROM link";

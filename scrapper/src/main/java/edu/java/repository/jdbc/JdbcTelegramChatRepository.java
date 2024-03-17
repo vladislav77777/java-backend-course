@@ -1,6 +1,7 @@
 package edu.java.repository.jdbc;
 
 import edu.java.entity.TelegramChat;
+import edu.java.repository.EntityRepository;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcTelegramChatRepository implements JdbcRepository<TelegramChat> {
+public class JdbcTelegramChatRepository implements EntityRepository<TelegramChat> {
     private static final String ADD_QUERY = "INSERT INTO telegram_chat (id, registered_at) VALUES (?, ?) RETURNING *";
     private static final String DELETE_QUERY = "DELETE FROM telegram_chat WHERE id=? RETURNING *";
     private static final String SELECT_ALL = "SELECT * FROM telegram_chat";

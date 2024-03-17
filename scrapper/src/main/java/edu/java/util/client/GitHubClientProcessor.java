@@ -3,6 +3,7 @@ package edu.java.util.client;
 import edu.java.client.GitHubClient;
 import edu.java.entity.Link;
 import java.net.URI;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,8 @@ public class GitHubClientProcessor extends BaseClientProcessor {
     @Override
     public Mono<String> getUpdate(Link link) {
         Matcher matcher = GIT_HUB_PATH_PATTERN.matcher(link.getUrl().getPath());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         if (matcher.matches()) {
             return gitHubClient.getIssue(
                     matcher.group("userName"),
@@ -36,9 +39,12 @@ public class GitHubClientProcessor extends BaseClientProcessor {
                     Long.parseLong(matcher.group("issueNumber"))
                 )
                 .mapNotNull(response -> {
-                    if (response.getUpdatedAt().isAfter(link.getLastUpdatedAt())) {
+                    if (response.getLast().getUpdatedAt().isAfter(link.getLastUpdatedAt())) {
 
-                        return "Repository updated";
+                        return "\nRepository updated " + "by "
+                            + response.getLast().getUser().login() + " at "
+                            + response.getLast().getUpdatedAt().format(formatter) + "\nMessage: "
+                            + response.getLast().getBody();
                     }
 
                     return null;
