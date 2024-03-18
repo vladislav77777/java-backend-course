@@ -8,7 +8,7 @@ import edu.java.exception.LinkNotSupportedException;
 import edu.java.exception.LinkNotTrackingException;
 import edu.java.repository.jdbc.JdbcLinkRepository;
 import edu.java.service.LinkService;
-import edu.java.util.client.BaseClientProcessor;
+import edu.java.util.LinkUtil;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -22,27 +22,27 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
-    private final JdbcLinkRepository linkRepository;
-    private final List<BaseClientProcessor> clientProcessors;
+    private final JdbcLinkRepository jdbcLinkRepository;
+    private final LinkUtil linkUtil;
 
     @Override
     public LinkResponse add(Long tgChatId, URI url) {
         Link link;
 
-        if (!isUrlSupports(url)) {
+        if (!linkUtil.isUrlSupported(url)) {
             throw new LinkNotSupportedException(url);
         }
 
         try {
-            link = linkRepository.add(new Link()
+            link = jdbcLinkRepository.add(new Link()
                 .setUrl(url)
                 .setLastUpdatedAt(OffsetDateTime.now()));
         } catch (DuplicateKeyException ignored) {
-            link = linkRepository.findByUrl(url);
+            link = jdbcLinkRepository.findByUrl(url);
         }
 
         try {
-            linkRepository.connectChatToLink(tgChatId, link.getId());
+            jdbcLinkRepository.connectChatToLink(tgChatId, link.getId());
         } catch (DuplicateKeyException ignored) {
             throw new LinkAlreadyTrackingException(tgChatId, url);
         }
@@ -53,9 +53,9 @@ public class JdbcLinkService implements LinkService {
     @Override
     public LinkResponse remove(Long tgChatId, URI url) {
         try {
-            Link link = linkRepository.findByUrl(url);
+            Link link = jdbcLinkRepository.findByUrl(url);
 
-            linkRepository.removeChatToLink(tgChatId, link.getId());
+            jdbcLinkRepository.removeChatToLink(tgChatId, link.getId());
 
             return new LinkResponse(link.getId(), link.getUrl());
         } catch (EmptyResultDataAccessException ignored) {
@@ -65,12 +65,12 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public Collection<Link> listAllWithInterval(Duration interval) {
-        return linkRepository.findAllWithInterval(interval);
+        return jdbcLinkRepository.findAllWithInterval(interval);
     }
 
     @Override
     public ListLinksResponse listAllForChat(Long tgChatId) {
-        Collection<Link> links = linkRepository.findAllForChat(tgChatId);
+        Collection<Link> links = jdbcLinkRepository.findAllForChat(tgChatId);
 
         return new ListLinksResponse(links.stream()
             .map(link -> new LinkResponse(link.getId(), link.getUrl()))
@@ -79,15 +79,12 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public List<Long> getAllChatsForLink(Long linkId) {
-        return linkRepository.findAllChatsForLink(linkId);
+        return jdbcLinkRepository.findAllChatsForLink(linkId);
     }
 
     @Override
     public void updateLink(Link link) {
-        linkRepository.updateLink(link);
+        jdbcLinkRepository.updateLink(link);
     }
 
-    private boolean isUrlSupports(URI url) {
-        return clientProcessors.stream().anyMatch(clientProcessor -> clientProcessor.isCandidate(url));
-    }
 }
