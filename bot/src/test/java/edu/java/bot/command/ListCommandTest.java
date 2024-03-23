@@ -74,7 +74,7 @@ class ListCommandTest extends CommandTest {
     }
 
     private String expectedResultBuilder() {
-        return String.join("\n", "Tracked Links:", "https://example.com", "https://example.org\n");
+        return String.join("\n", "Tracked Links:", "1: https://example.com", "2: https://example.org\n");
     }
 }
 
