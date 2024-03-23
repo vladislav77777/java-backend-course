@@ -10,7 +10,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.ASSIGNMENT;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.LINK;
 
@@ -20,7 +19,6 @@ public class JooqLinkRepository implements EntityRepository<Link> {
     private final DSLContext dslContext;
 
     @Override
-    @Transactional
     public Link add(Link entity) {
         return dslContext.insertInto(LINK, LINK.URL, LINK.LAST_UPDATED_AT)
             .values(entity.getUrl().toString(), entity.getLastUpdatedAt())
@@ -29,7 +27,6 @@ public class JooqLinkRepository implements EntityRepository<Link> {
     }
 
     @Override
-    @Transactional
     public Link remove(Link entity) {
         return dslContext.deleteFrom(LINK)
             .where(LINK.ID.eq(entity.getId()))
@@ -38,14 +35,12 @@ public class JooqLinkRepository implements EntityRepository<Link> {
     }
 
     @Override
-    @Transactional
     public Collection<Link> findAll() {
         return dslContext.select(LINK.fields())
             .from(LINK)
             .fetchInto(Link.class);
     }
 
-    @Transactional
     public Collection<Link> findAllWithInterval(Duration interval) {
         return dslContext.select(LINK.fields())
             .from(LINK)
@@ -53,7 +48,6 @@ public class JooqLinkRepository implements EntityRepository<Link> {
             .fetchInto(Link.class);
     }
 
-    @Transactional
     public Link findByUrl(URI url) {
         return dslContext.select(LINK.fields())
             .from(LINK)
@@ -61,21 +55,18 @@ public class JooqLinkRepository implements EntityRepository<Link> {
             .fetchOneInto(Link.class);
     }
 
-    @Transactional
     public void connectChatToLink(Long chatId, Long linkId) {
         dslContext.insertInto(ASSIGNMENT, ASSIGNMENT.CHAT_ID, ASSIGNMENT.LINK_ID)
             .values(chatId, linkId)
             .execute();
     }
 
-    @Transactional
     public void removeChatToLink(Long chatId, Long linkId) {
         dslContext.deleteFrom(ASSIGNMENT)
             .where(ASSIGNMENT.CHAT_ID.eq(chatId).and(ASSIGNMENT.LINK_ID.eq(linkId)))
             .execute();
     }
 
-    @Transactional
     public Collection<Link> findAllForChat(Long chatId) {
         return dslContext.select(LINK.fields())
             .from(LINK)
@@ -84,7 +75,6 @@ public class JooqLinkRepository implements EntityRepository<Link> {
             .fetchInto(Link.class);
     }
 
-    @Transactional
     public List<Long> findAllChatsForLink(Long linkId) {
         return dslContext.select(ASSIGNMENT.CHAT_ID)
             .from(ASSIGNMENT)
@@ -92,7 +82,6 @@ public class JooqLinkRepository implements EntityRepository<Link> {
             .fetchInto(Long.class);
     }
 
-    @Transactional
     public void updateLink(Link link) {
         dslContext.update(LINK)
             .set(LINK.LAST_UPDATED_AT, link.getLastUpdatedAt())

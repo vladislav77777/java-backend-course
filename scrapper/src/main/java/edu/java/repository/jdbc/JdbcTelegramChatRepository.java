@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,7 +18,6 @@ public class JdbcTelegramChatRepository implements EntityRepository<TelegramChat
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    @Transactional
     public TelegramChat add(TelegramChat entity) {
         return jdbcTemplate.queryForObject(
             ADD_QUERY,
@@ -30,7 +28,6 @@ public class JdbcTelegramChatRepository implements EntityRepository<TelegramChat
     }
 
     @Override
-    @Transactional
     public TelegramChat remove(TelegramChat entity) {
         return jdbcTemplate.queryForObject(
             DELETE_QUERY,
@@ -40,7 +37,6 @@ public class JdbcTelegramChatRepository implements EntityRepository<TelegramChat
     }
 
     @Override
-    @Transactional
     public Collection<TelegramChat> findAll() {
         return jdbcTemplate.query(SELECT_ALL, new BeanPropertyRowMapper<>(TelegramChat.class));
     }
