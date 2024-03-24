@@ -60,8 +60,8 @@ public class ListCommand implements Command {
         List<String> urls = links.stream().map(linkResponse -> linkResponse.url().toString()).toList();
 
         StringBuilder message = new StringBuilder("Tracked Links:\n");
-        for (String link : urls) {
-            message.append(link).append("\n");
+        for (int i = 0; i < urls.size(); i++) {
+            message.append(i + 1).append(": ").append(urls.get(i)).append("\n");
         }
         return message.toString();
     }

@@ -3,6 +3,8 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 10s
+    link-last-check-interval: 30s
+
   client:
     gitHub: "https://api.github.com"
     stackOverflow: "https://api.stackexchange.com/2.3"
@@ -11,13 +13,20 @@ app:
   debug-information:
     api-error-response-stack-trace-list-length: 5
 
+  database-access-type: jpa
+
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   application:
     name: scrapper
   datasource:
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 20
     url: ${DB_URL:jdbc:postgresql://localhost:5432/scrapper}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    password: ${DB_PASSWORD:changeme}
   liquibase:
     enabled: false
 
@@ -26,3 +35,5 @@ server:
 # http://localhost:8080/swagger-ui/index.html
 logging:
   config: classpath:log4j2-plain.xml
+  level:
+    org.springframework.jdbc.core: DEBUG

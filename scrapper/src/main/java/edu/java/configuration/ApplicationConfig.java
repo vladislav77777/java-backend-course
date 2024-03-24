@@ -11,14 +11,23 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     LinkClient client,
-    DebugInformation debugInformation
+    DebugInformation debugInformation,
+    AccessType databaseAccessType
 ) {
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    public record Scheduler(
+        boolean enable,
+        @NotNull Duration interval,
+        @NotNull Duration forceCheckDelay,
+        @NotNull Duration linkLastCheckInterval) {
     }
 
     public record LinkClient(String gitHub, String stackOverflow, String bot) {
     }
 
     public record DebugInformation(Integer apiErrorResponseStackTraceListLength) {
+    }
+
+    public enum AccessType {
+        JDBC, JPA, JOOQ
     }
 }
