@@ -12,13 +12,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler {
     private final List<BaseClientProcessor> clientProcessors;
-    private final LinkService jooqLinkService;
+    private final LinkService linkService;
     private final BotClient botClient;
     private final ApplicationConfig config;
 
@@ -26,21 +27,22 @@ public class LinkUpdaterScheduler {
     public void update() {
         log.info("Update method was invoked");
 
-        jooqLinkService.listAllWithInterval(config.scheduler().linkLastCheckInterval()).forEach(link -> {
+        linkService.listAllWithInterval(config.scheduler().linkLastCheckInterval()).forEach(link -> {
             for (BaseClientProcessor clientProcessor : clientProcessors) {
                 if (clientProcessor.isCandidate(link.getUrl())) {
                     LinkUpdateRequest s = clientProcessor.getUpdate(link)
                         .filter(Objects::nonNull)
+                        .publishOn(Schedulers.boundedElastic())
                         .map(update -> new LinkUpdateRequest(
                             link.getId(),
                             link.getUrl(),
                             update,
-                            jooqLinkService.getAllChatsForLink(link.getId())
+                            linkService.getAllChatsForLink(link.getId())
                         )).block();
                     if (s != null) {
                         botClient.sendUpdate(s);
                     }
-                    jooqLinkService.updateLink(link.setLastUpdatedAt(OffsetDateTime.now()));
+                    linkService.updateLink(link.setLastUpdatedAt(OffsetDateTime.now()));
 
                     break;
                 }

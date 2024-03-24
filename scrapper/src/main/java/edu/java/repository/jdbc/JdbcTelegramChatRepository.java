@@ -6,9 +6,7 @@ import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
-@Repository
 @RequiredArgsConstructor
 public class JdbcTelegramChatRepository implements EntityRepository<TelegramChat> {
     private static final String ADD_QUERY = "INSERT INTO telegram_chat (id, registered_at) VALUES (?, ?) RETURNING *";

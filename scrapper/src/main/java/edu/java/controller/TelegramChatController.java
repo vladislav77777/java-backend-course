@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/tg-chat")
 @RequiredArgsConstructor
 public class TelegramChatController {
-    private final TelegramChatService jooqTelegramChatService;
+    private final TelegramChatService linkService;
 
     @PostMapping("/{id}")
     public ChatOperationResponse registerChat(@PathVariable Long id) {
-        return jooqTelegramChatService.register(id);
+        return linkService.register(id);
     }
 
     @DeleteMapping("/{id}")
     public ChatOperationResponse deleteChat(@PathVariable Long id) {
-        return jooqTelegramChatService.unregister(id);
+        return linkService.unregister(id);
     }
 }

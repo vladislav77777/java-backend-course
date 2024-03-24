@@ -6,6 +6,7 @@ import edu.java.entity.dto.ListLinksResponse;
 import edu.java.exception.LinkAlreadyTrackingException;
 import edu.java.exception.LinkNotSupportedException;
 import edu.java.exception.LinkNotTrackingException;
+import edu.java.exception.TelegramChatNotExistsException;
 import edu.java.repository.jdbc.JdbcLinkRepository;
 import edu.java.service.LinkService;
 import edu.java.util.LinkUtil;
@@ -15,11 +16,10 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
     private final JdbcLinkRepository jdbcLinkRepository;
@@ -45,6 +45,8 @@ public class JdbcLinkService implements LinkService {
             jdbcLinkRepository.connectChatToLink(tgChatId, link.getId());
         } catch (DuplicateKeyException ignored) {
             throw new LinkAlreadyTrackingException(tgChatId, url);
+        } catch (DataIntegrityViolationException ignored) {
+            throw new TelegramChatNotExistsException(tgChatId);
         }
 
         return new LinkResponse(link.getId(), link.getUrl());
