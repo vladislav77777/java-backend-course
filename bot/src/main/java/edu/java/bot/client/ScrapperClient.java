@@ -9,6 +9,7 @@ import edu.java.bot.exception.ApiErrorResponseException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.support.RetryTemplate;
 import reactor.core.publisher.Mono;
 
 public class ScrapperClient extends Client {
