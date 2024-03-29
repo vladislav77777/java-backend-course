@@ -1,6 +1,7 @@
 package edu.java.bot.configuration;
 
 import edu.java.bot.client.ScrapperClient;
+import edu.java.bot.client.ScrapperClientBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,10 @@ public class ClientConfiguration {
 
     @Bean
     public ScrapperClient scrapperClient(RetryTemplate retryTemplate) {
-        return new ScrapperClient(config.client().scrapper(), retryTemplate);
+        return new ScrapperClientBuilder()
+            .setBaseUrl(config.client().scrapper())
+            .setRetryTemplate(retryTemplate)
+            .build();
     }
 
 }

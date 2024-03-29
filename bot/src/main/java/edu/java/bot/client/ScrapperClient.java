@@ -47,6 +47,7 @@ public class ScrapperClient extends Client {
     }
 
     public Mono<ResponseEntity<ListLinksResponse>> getAllLinksForChat(Long tgChatId) {
+        System.out.println(retryTemplate);
         return retryTemplate.execute(context -> webClient.get()
             .uri(LINK_CONTROLLER_URI)
             .header(TG_CHAT_ID_HEADER, tgChatId.toString())
