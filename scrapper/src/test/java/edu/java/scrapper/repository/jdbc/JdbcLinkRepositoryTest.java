@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+//@DirtiesContext
 public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Autowired
     private JdbcLinkRepository jdbcLinkRepository;

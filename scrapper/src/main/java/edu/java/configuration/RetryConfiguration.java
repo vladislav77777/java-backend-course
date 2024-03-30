@@ -1,6 +1,7 @@
 package edu.java.configuration;
 
 import edu.java.configuration.retry.HttpStatusCodeRetryPolicy;
+import edu.java.configuration.retry.LinearBackOffPolicy;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,24 +29,24 @@ public class RetryConfiguration {
         return template;
     }
 
-//    @Bean
-//    @ConditionalOnProperty(prefix = "app", name = "retry.type", havingValue = "linear")
-//    public RetryTemplate linearRetryTemplate(ApplicationConfig config) {
-//        RetryTemplate template = new RetryTemplate();
-//        HttpStatusCodeRetryPolicy retryPolicy = new HttpStatusCodeRetryPolicy(
-//            config.retry().maxAttempts(),
-//            config.retry().retryStatusCodes()
-//        );
-//        LinearBackOffPolicy backOffPolicy = new LinearBackOffPolicy();
-//
-//        backOffPolicy.setInitialInterval(config.retry().delayConfig().linear().initialIntervalMillis());
-//        backOffPolicy.setMaxInterval(config.retry().delayConfig().linear().maxIntervalMillis());
-//
-//        template.setRetryPolicy(retryPolicy);
-//        template.setBackOffPolicy(backOffPolicy);
-//
-//        return template;
-//    }
+    @Bean
+    @ConditionalOnProperty(prefix = "app", name = "retry.type", havingValue = "linear")
+    public RetryTemplate linearRetryTemplate(ApplicationConfig config) {
+        RetryTemplate template = new RetryTemplate();
+        HttpStatusCodeRetryPolicy retryPolicy = new HttpStatusCodeRetryPolicy(
+            config.retry().maxAttempts(),
+            config.retry().retryStatusCodes()
+        );
+        LinearBackOffPolicy backOffPolicy = new LinearBackOffPolicy();
+
+        backOffPolicy.setInitialInterval(config.retry().delayConfig().linear().initialIntervalMillis());
+        backOffPolicy.setMaxInterval(config.retry().delayConfig().linear().maxIntervalMillis());
+
+        template.setRetryPolicy(retryPolicy);
+        template.setBackOffPolicy(backOffPolicy);
+
+        return template;
+    }
 
     @Bean
     @ConditionalOnProperty(prefix = "app", name = "retry.type", havingValue = "exponential")

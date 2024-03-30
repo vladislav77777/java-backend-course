@@ -7,11 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Log4j2
 @Testcontainers
+@DirtiesContext
 public class SimpleContainerTest extends IntegrationTest {
     @Test
     public void assertThatTablesExists() {
