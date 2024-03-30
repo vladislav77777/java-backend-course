@@ -18,7 +18,7 @@ app:
   retry:
     max-attempts: 3
     retry-status-codes: 500, 502, 503, 504
-    type: linear
+    type: exponential
     delay-config:
       constant:
         back-off-period-millis: 1000

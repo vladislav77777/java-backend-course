@@ -47,7 +47,6 @@ public class ScrapperClient extends Client {
     }
 
     public Mono<ResponseEntity<ListLinksResponse>> getAllLinksForChat(Long tgChatId) {
-        System.out.println(retryTemplate);
         return retryTemplate.execute(context -> webClient.get()
             .uri(LINK_CONTROLLER_URI)
             .header(TG_CHAT_ID_HEADER, tgChatId.toString())
@@ -60,6 +59,20 @@ public class ScrapperClient extends Client {
     }
 
     public Mono<ResponseEntity<LinkResponse>> addLink(Long tgChatId, AddLinkRequest request) {
+        return retryTemplate.execute(context -> webClient.post()
+            .uri(LINK_CONTROLLER_URI)
+            .header(TG_CHAT_ID_HEADER, tgChatId.toString())
+            .bodyValue(request)
+            .retrieve()
+            .onStatus(
+                statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode)
+                    || HttpStatus.NOT_ACCEPTABLE.equals(statusCode),
+                response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
+            )
+            .toEntity(LinkResponse.class));
+    }
+
+    public Mono<ResponseEntity<LinkResponse>> removeLink(Long tgChatId, RemoveLinkRequest request) {
         return retryTemplate.execute(context -> webClient.method(HttpMethod.DELETE)
             .uri(LINK_CONTROLLER_URI)
             .header(TG_CHAT_ID_HEADER, tgChatId.toString())
@@ -70,18 +83,5 @@ public class ScrapperClient extends Client {
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
             .toEntity(LinkResponse.class));
-    }
-
-    public Mono<ResponseEntity<LinkResponse>> removeLink(Long tgChatId, RemoveLinkRequest request) {
-        return webClient.method(HttpMethod.DELETE)
-            .uri(LINK_CONTROLLER_URI)
-            .header(TG_CHAT_ID_HEADER, tgChatId.toString())
-            .bodyValue(request)
-            .retrieve()
-            .onStatus(
-                statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
-                response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
-            )
-            .toEntity(LinkResponse.class);
     }
 }

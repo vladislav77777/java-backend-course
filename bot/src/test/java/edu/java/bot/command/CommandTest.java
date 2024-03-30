@@ -8,10 +8,7 @@ import edu.java.bot.client.ScrapperClientBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.springframework.stereotype.Component;
-import static org.mockito.Mockito.when;
 
-@Component
 public abstract class CommandTest {
     protected final long chatId = 123L;
     // Dependencies (will be mocked)
@@ -25,9 +22,9 @@ public abstract class CommandTest {
     @BeforeEach
     void init() {
 //        === when(update.message().chat().id()).thenReturn(chatId);
-        when(update.message()).thenReturn(message);
-        when(message.chat()).thenReturn(chat);
-        when(chat.id()).thenReturn(chatId);
+        Mockito.doReturn(message).when(update).message();
+        Mockito.doReturn(chat).when(message).chat();
+        Mockito.doReturn(chatId).when(chat).id();
         client = Mockito.spy(new ScrapperClientBuilder().build());
     }
 }
