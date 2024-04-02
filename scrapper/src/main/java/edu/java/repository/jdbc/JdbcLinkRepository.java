@@ -1,6 +1,7 @@
 package edu.java.repository.jdbc;
 
 import edu.java.entity.Link;
+import edu.java.repository.EntityRepository;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -11,11 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcLinkRepository implements JdbcRepository<Link> {
+public class JdbcLinkRepository implements EntityRepository<Link> {
     private static final String ADD_QUERY = "INSERT INTO link (url, last_updated_at) VALUES (?, ?) RETURNING *";
     private static final String DELETE_QUERY = "DELETE FROM link WHERE id=? RETURNING *";
     private static final String SELECT_ALL = "SELECT * FROM link";
@@ -32,7 +32,6 @@ public class JdbcLinkRepository implements JdbcRepository<Link> {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    @Transactional
     public Link add(Link entity) {
         return jdbcTemplate.queryForObject(
             ADD_QUERY,
@@ -43,18 +42,15 @@ public class JdbcLinkRepository implements JdbcRepository<Link> {
     }
 
     @Override
-    @Transactional
     public Link remove(Link entity) {
         return jdbcTemplate.queryForObject(DELETE_QUERY, new BeanPropertyRowMapper<>(Link.class), entity.getId());
     }
 
     @Override
-    @Transactional
     public Collection<Link> findAll() {
         return jdbcTemplate.query(SELECT_ALL, new BeanPropertyRowMapper<>(Link.class));
     }
 
-    @Transactional
     public Collection<Link> findAllWithInterval(Duration interval) {
         return jdbcTemplate.query(
             SELECT_ALL_WITH_INTERVAL,
@@ -63,7 +59,6 @@ public class JdbcLinkRepository implements JdbcRepository<Link> {
         );
     }
 
-    @Transactional
     public Link findByUrl(URI url) {
         return jdbcTemplate.queryForObject(
             SELECT_BY_URL,
@@ -72,22 +67,18 @@ public class JdbcLinkRepository implements JdbcRepository<Link> {
         );
     }
 
-    @Transactional
     public void connectChatToLink(Long chatId, Long linkId) {
         jdbcTemplate.update(ADD_CHAT_TO_LINK, chatId, linkId);
     }
 
-    @Transactional
     public void removeChatToLink(Long chatId, Long linkId) {
         jdbcTemplate.update(DELETE_CHAT_TO_LINK, chatId, linkId);
     }
 
-    @Transactional
     public Collection<Link> findAllForChat(Long chatId) {
         return jdbcTemplate.query(SELECT_ALL_FOR_CHAT, new BeanPropertyRowMapper<>(Link.class), chatId);
     }
 
-    @Transactional
     public List<Long> findAllChatsForLink(Long linkId) {
         return jdbcTemplate.query(
             SELECT_ALL_CHATS_FOR_LINK,
@@ -96,7 +87,6 @@ public class JdbcLinkRepository implements JdbcRepository<Link> {
         );
     }
 
-    @Transactional
     public void updateLink(Link link) {
         jdbcTemplate.update(UPDATE_LINK, link.getLastUpdatedAt(), link.getId());
     }

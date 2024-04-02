@@ -1,4 +1,4 @@
-package edu.java.service.jdbc;
+package edu.java.service.jooq;
 
 import edu.java.entity.Link;
 import edu.java.entity.dto.LinkResponse;
@@ -6,7 +6,7 @@ import edu.java.entity.dto.ListLinksResponse;
 import edu.java.exception.LinkAlreadyTrackingException;
 import edu.java.exception.LinkNotSupportedException;
 import edu.java.exception.LinkNotTrackingException;
-import edu.java.repository.jdbc.JdbcLinkRepository;
+import edu.java.repository.jooq.JooqLinkRepository;
 import edu.java.service.LinkService;
 import edu.java.util.LinkUtil;
 import java.net.URI;
@@ -16,13 +16,12 @@ import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JdbcLinkService implements LinkService {
-    private final JdbcLinkRepository jdbcLinkRepository;
+public class JooqLinkService implements LinkService {
+    private final JooqLinkRepository jooqLinkRepository;
     private final LinkUtil linkUtil;
 
     @Override
@@ -34,15 +33,15 @@ public class JdbcLinkService implements LinkService {
         }
 
         try {
-            link = jdbcLinkRepository.add(new Link()
+            link = jooqLinkRepository.add(new Link()
                 .setUrl(url)
                 .setLastUpdatedAt(OffsetDateTime.now()));
         } catch (DuplicateKeyException ignored) {
-            link = jdbcLinkRepository.findByUrl(url);
+            link = jooqLinkRepository.findByUrl(url);
         }
 
         try {
-            jdbcLinkRepository.connectChatToLink(tgChatId, link.getId());
+            jooqLinkRepository.connectChatToLink(tgChatId, link.getId());
         } catch (DuplicateKeyException ignored) {
             throw new LinkAlreadyTrackingException(tgChatId, url);
         }
@@ -52,25 +51,25 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public LinkResponse remove(Long tgChatId, URI url) {
-        try {
-            Link link = jdbcLinkRepository.findByUrl(url);
+        Link link = jooqLinkRepository.findByUrl(url);
 
-            jdbcLinkRepository.removeChatToLink(tgChatId, link.getId());
-
-            return new LinkResponse(link.getId(), link.getUrl());
-        } catch (EmptyResultDataAccessException ignored) {
+        if (link == null) {
             throw new LinkNotTrackingException(tgChatId, url);
         }
+
+        jooqLinkRepository.removeChatToLink(tgChatId, link.getId());
+
+        return new LinkResponse(link.getId(), link.getUrl());
     }
 
     @Override
     public Collection<Link> listAllWithInterval(Duration interval) {
-        return jdbcLinkRepository.findAllWithInterval(interval);
+        return jooqLinkRepository.findAllWithInterval(interval);
     }
 
     @Override
     public ListLinksResponse listAllForChat(Long tgChatId) {
-        Collection<Link> links = jdbcLinkRepository.findAllForChat(tgChatId);
+        Collection<Link> links = jooqLinkRepository.findAllForChat(tgChatId);
 
         return new ListLinksResponse(links.stream()
             .map(link -> new LinkResponse(link.getId(), link.getUrl()))
@@ -79,12 +78,11 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public List<Long> getAllChatsForLink(Long linkId) {
-        return jdbcLinkRepository.findAllChatsForLink(linkId);
+        return jooqLinkRepository.findAllChatsForLink(linkId);
     }
 
     @Override
     public void updateLink(Link link) {
-        jdbcLinkRepository.updateLink(link);
+        jooqLinkRepository.updateLink(link);
     }
-
 }

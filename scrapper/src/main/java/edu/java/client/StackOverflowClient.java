@@ -13,10 +13,11 @@ public class StackOverflowClient extends Client {
     public Mono<StackOverflowResponse> fetchQuestion(long questionId) {
         return Objects.requireNonNull(webClient.get()
             .uri(
-                "/questions/{questionId}?site=stackoverflow&filter=withbody",
+                "/questions/{questionId}/answers?site=stackoverflow&filter=withbody",
                 questionId
             )
             .retrieve()
             .bodyToMono(StackOverflowResponse.class));
     }
+
 }

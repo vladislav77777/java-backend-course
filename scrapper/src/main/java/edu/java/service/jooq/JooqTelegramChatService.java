@@ -1,10 +1,10 @@
-package edu.java.service.jdbc;
+package edu.java.service.jooq;
 
 import edu.java.entity.TelegramChat;
 import edu.java.entity.dto.ChatOperationResponse;
 import edu.java.exception.TelegramChatAlreadyRegistered;
 import edu.java.exception.TelegramChatNotExistsException;
-import edu.java.repository.jdbc.JdbcTelegramChatRepository;
+import edu.java.repository.jooq.JooqTelegramChatRepository;
 import edu.java.service.TelegramChatService;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JdbcTelegramChatService implements TelegramChatService {
-    private final JdbcTelegramChatRepository telegramChatRepository;
+public class JooqTelegramChatService implements TelegramChatService {
+    private final JooqTelegramChatRepository jooqTelegramChatRepository;
 
     @Override
     public ChatOperationResponse register(Long tgChatId) {
         try {
-            TelegramChat savedEntity = telegramChatRepository.add(new TelegramChat()
+            TelegramChat savedEntity = jooqTelegramChatRepository.add(new TelegramChat()
                 .setId(tgChatId)
                 .setRegisteredAt(OffsetDateTime.now()));
 
@@ -33,10 +33,14 @@ public class JdbcTelegramChatService implements TelegramChatService {
     @Override
     public ChatOperationResponse unregister(Long tgChatId) {
         try {
-            TelegramChat deletedEntity = telegramChatRepository.remove(new TelegramChat()
+            TelegramChat deletedEntity = jooqTelegramChatRepository.remove(new TelegramChat()
                 .setId(tgChatId));
 
-            return new ChatOperationResponse(deletedEntity != null);
+            if (deletedEntity == null) {
+                throw new TelegramChatNotExistsException(tgChatId);
+            }
+
+            return new ChatOperationResponse(true);
         } catch (EmptyResultDataAccessException ignored) {
             throw new TelegramChatNotExistsException(tgChatId);
         }

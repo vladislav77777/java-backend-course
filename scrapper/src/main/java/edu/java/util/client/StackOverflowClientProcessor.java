@@ -4,6 +4,7 @@ import edu.java.client.StackOverflowClient;
 import edu.java.entity.Link;
 import edu.java.entity.dto.StackOverflowResponse;
 import java.net.URI;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
@@ -32,11 +33,15 @@ public class StackOverflowClientProcessor extends BaseClientProcessor {
         Matcher matcher = STACK_OVERFLOW_PATH_PATTERN.matcher(link.getUrl().getPath());
 
         if (matcher.matches()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
             return stackOverflowClient.fetchQuestion(Long.parseLong(matcher.group("questionId")))
                 .mapNotNull(response -> {
                     StackOverflowResponse.ItemResponse first = response.items().getFirst();
                     if (first.lastActivityDate().isAfter(link.getLastUpdatedAt())) {
-                        return "Question updated";
+                        return "\nQuestion updated " + "by "
+                            + first.owner().displayName() + " at "
+                            + first.creationDate().format(formatter) + "\n";
                     }
 
                     return null;

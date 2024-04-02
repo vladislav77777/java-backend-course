@@ -38,7 +38,7 @@ public class StackOverflowClientTest {
     @Test
     public void testFetchQuestion() {
         // Simulate response from Stack Overflow API
-        WIRE_MOCK_SERVER.stubFor(get(urlEqualTo("/questions/1?site=stackoverflow&filter=withbody"))
+        WIRE_MOCK_SERVER.stubFor(get(urlEqualTo("/questions/1/answers?site=stackoverflow&filter=withbody"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
