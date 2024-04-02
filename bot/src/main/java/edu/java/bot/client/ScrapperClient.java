@@ -9,6 +9,7 @@ import edu.java.bot.exception.ApiErrorResponseException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.support.RetryTemplate;
 import reactor.core.publisher.Mono;
 
 public class ScrapperClient extends Client {
@@ -16,34 +17,37 @@ public class ScrapperClient extends Client {
     private static final String TG_CHAT_CONTROLLER_URI = "/tg-chat/{id}";
     private static final String LINK_CONTROLLER_URI = "/links";
 
-    public ScrapperClient(String baseUrl) {
+    private final RetryTemplate retryTemplate;
+
+    public ScrapperClient(String baseUrl, RetryTemplate retryTemplate) {
         super(baseUrl);
+        this.retryTemplate = retryTemplate;
     }
 
     public Mono<ResponseEntity<Void>> registerChat(Long tgChatId) {
-        return webClient.post()
+        return retryTemplate.execute(context -> webClient.post()
             .uri(TG_CHAT_CONTROLLER_URI, tgChatId)
             .retrieve()
             .onStatus(
                 statusCode -> HttpStatus.CONFLICT.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
-            .toBodilessEntity();
+            .toBodilessEntity());
     }
 
     public Mono<ResponseEntity<Void>> deleteChat(Long tgChatId) {
-        return webClient.delete()
+        return retryTemplate.execute(context -> webClient.delete()
             .uri(TG_CHAT_CONTROLLER_URI, tgChatId)
             .retrieve()
             .onStatus(
                 statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
-            .toBodilessEntity();
+            .toBodilessEntity());
     }
 
     public Mono<ResponseEntity<ListLinksResponse>> getAllLinksForChat(Long tgChatId) {
-        return webClient.get()
+        return retryTemplate.execute(context -> webClient.get()
             .uri(LINK_CONTROLLER_URI)
             .header(TG_CHAT_ID_HEADER, tgChatId.toString())
             .retrieve()
@@ -51,11 +55,11 @@ public class ScrapperClient extends Client {
                 statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
-            .toEntity(ListLinksResponse.class);
+            .toEntity(ListLinksResponse.class));
     }
 
     public Mono<ResponseEntity<LinkResponse>> addLink(Long tgChatId, AddLinkRequest request) {
-        return webClient.post()
+        return retryTemplate.execute(context -> webClient.post()
             .uri(LINK_CONTROLLER_URI)
             .header(TG_CHAT_ID_HEADER, tgChatId.toString())
             .bodyValue(request)
@@ -65,11 +69,11 @@ public class ScrapperClient extends Client {
                     || HttpStatus.NOT_ACCEPTABLE.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
-            .toEntity(LinkResponse.class);
+            .toEntity(LinkResponse.class));
     }
 
     public Mono<ResponseEntity<LinkResponse>> removeLink(Long tgChatId, RemoveLinkRequest request) {
-        return webClient.method(HttpMethod.DELETE)
+        return retryTemplate.execute(context -> webClient.method(HttpMethod.DELETE)
             .uri(LINK_CONTROLLER_URI)
             .header(TG_CHAT_ID_HEADER, tgChatId.toString())
             .bodyValue(request)
@@ -78,6 +82,6 @@ public class ScrapperClient extends Client {
                 statusCode -> HttpStatus.NOT_FOUND.equals(statusCode) || HttpStatus.BAD_REQUEST.equals(statusCode),
                 response -> response.bodyToMono(ApiErrorResponse.class).map(ApiErrorResponseException::new)
             )
-            .toEntity(LinkResponse.class);
+            .toEntity(LinkResponse.class));
     }
 }

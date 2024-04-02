@@ -3,7 +3,9 @@ package edu.java.scrapper.client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 
+@DirtiesContext
 public class GitHubProcessorTest {
     private static final Pattern GIT_HUB_PATH_PATTERN =
         Pattern.compile("^(?<userName>[a-z-A-Z0-9]+)/(?<repositoryName>[\\w-.]+)/issues/(?<issueNumber>[\\d]+)(/)?$");

@@ -11,13 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -50,8 +50,10 @@ class ListCommandTest extends CommandTest {
             new LinkResponse(1L, URI.create("https://example.com")),
             new LinkResponse(2L, URI.create("https://example.org"))
         );
-        when(client.getAllLinksForChat(chatId)).thenReturn(Mono.just(ResponseEntity.ok()
-            .body(new ListLinksResponse(trackedLinks, 2))));
+
+        Mockito.doReturn(Mono.just(ResponseEntity.ok()
+                .body(new ListLinksResponse(trackedLinks, 2))))
+            .when(client).getAllLinksForChat(chatId);
 
         SendMessage actualResult = listCommand.handle(update);
         String expectedString = expectedResultBuilder();
@@ -64,11 +66,12 @@ class ListCommandTest extends CommandTest {
     @Test
     @DisplayName("Check /list command with no links")
     void assertThatHandleCommandWithEmptyTrackedLinks() {
-        when(client.getAllLinksForChat(chatId)).thenReturn(Mono.just(ResponseEntity.ok()
-            .body(new ListLinksResponse(Collections.emptyList(), 0))));
+
+        Mockito.doReturn(Mono.just(ResponseEntity.ok()
+                .body(new ListLinksResponse(Collections.emptyList(), 0))))
+            .when(client).getAllLinksForChat(chatId);
 
         SendMessage actualResult = listCommand.handle(update);
-
         assertEquals("The list of tracked links is empty.", actualResult.getParameters().get("text"));
         assertEquals(chatId, actualResult.getParameters().get("chat_id"));
     }

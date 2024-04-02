@@ -2,13 +2,46 @@ app:
   telegram-token: ${TELEGRAM_API_KEY}
   client:
     scrapper: ${SCRAPPER_BASE_URL:http://localhost:8080}
+  retry:
+    max-attempts: 3
+    retry-status-codes: 500, 502, 503, 504
+    type: linear
+    delay-config:
+      constant:
+        back-off-period-millis: 1000
+      linear:
+        initial-interval-millis: 1000
+        max-interval-millis: 5000
+      exponential:
+        initial-interval-millis: 1000
+        multiplier: 2
+        max-interval-millis: 100000
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+  cache:
+    jcache:
+      provider: com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
+    caffeine:
+      spec: maximumSize=100000,expireAfterAccess=60s
+    cache-names:
+      - rate-limit-buckets-bot
 
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: rate-limit-buckets-bot
+      url: /.*
+      http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"You have exhausted your API Request Quota\" }"
+      rate-limits:
+        - bandwidths:
+            - capacity: 100
+              time: 1
+              unit: minutes
+              refill-speed: interval
 server:
   port: 8090
 # http://localhost:8090/swagger-ui/index.html
