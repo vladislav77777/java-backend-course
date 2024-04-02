@@ -11,7 +11,8 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     LinkClient client,
-    DebugInformation debugInformation
+    DebugInformation debugInformation,
+    AccessType databaseAccessType
 ) {
     public record Scheduler(
         boolean enable,
@@ -24,5 +25,9 @@ public record ApplicationConfig(
     }
 
     public record DebugInformation(Integer apiErrorResponseStackTraceListLength) {
+    }
+
+    public enum AccessType {
+        JDBC, JPA, JOOQ
     }
 }

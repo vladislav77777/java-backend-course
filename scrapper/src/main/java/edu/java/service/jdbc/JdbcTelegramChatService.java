@@ -10,9 +10,7 @@ import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcTelegramChatService implements TelegramChatService {
     private final JdbcTelegramChatRepository telegramChatRepository;

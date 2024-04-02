@@ -5,10 +5,8 @@ import edu.java.repository.EntityRepository;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.TELEGRAM_CHAT;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqTelegramChatRepository implements EntityRepository<TelegramChat> {
     private final DSLContext dslContext;
