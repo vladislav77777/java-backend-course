@@ -67,7 +67,8 @@ public class KafkaConfiguration {
         return new DefaultKafkaProducerFactory<>(Map.of(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafkaConfigInfo().bootstrapServers(),
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class,
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class
+            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class,
+            JsonSerializer.ADD_TYPE_INFO_HEADERS, false
         ));
     }
 
