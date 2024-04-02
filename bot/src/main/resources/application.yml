@@ -16,7 +16,12 @@ app:
         initial-interval-millis: 1000
         multiplier: 2
         max-interval-millis: 100000
-
+  kafka-config-info:
+    bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094
+    updates-topic:
+      name: scrapper.updates
+      partitions: 2
+      replicas: 2
 spring:
   application:
     name: bot
