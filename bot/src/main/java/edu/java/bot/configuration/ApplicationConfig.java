@@ -12,7 +12,8 @@ public record ApplicationConfig(
     String telegramToken,
     Client client,
     Retry retry,
-    KafkaConfigInfo kafkaConfigInfo
+    KafkaConfigInfo kafkaConfigInfo,
+    Micrometer micrometer
 ) {
     public record Client(String scrapper) {
     }
@@ -60,6 +61,16 @@ public record ApplicationConfig(
             String name,
             Integer partitions,
             Integer replicas
+        ) {
+        }
+    }
+
+    public record Micrometer(
+        ProcessedMessagesCounter processedMessagesCounter
+    ) {
+        public record ProcessedMessagesCounter(
+            String name,
+            String description
         ) {
         }
     }

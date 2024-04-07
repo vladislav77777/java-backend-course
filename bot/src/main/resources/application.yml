@@ -22,6 +22,11 @@ app:
       name: scrapper.updates
       partitions: 2
       replicas: 2
+  micrometer:
+    processed-messages-counter:
+      name: messages.processed
+      description: Количество обработанных сообщений
+
 spring:
   application:
     name: bot
