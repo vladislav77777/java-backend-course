@@ -13,6 +13,7 @@ app:
   debug-information:
     api-error-response-stack-trace-list-length: 5
   database-access-type: jpa
+
   retry:
     max-attempts: 3
     retry-status-codes: 500, 502, 503, 504
@@ -27,6 +28,14 @@ app:
         initial-interval-millis: 1000
         multiplier: 2
         max-interval-millis: 100000
+
+  kafka-config-info:
+    bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094
+    updates-topic:
+      name: scrapper.updates
+      partitions: 2
+      replicas: 2
+  use-queue: true
 
 spring:
   jpa:
