@@ -24,6 +24,7 @@ public class ScrapperQueueConsumer {
     public void listen(@Payload LinkUpdateRequest request) {
         try {
             linkUpdateService.sendUpdateNotification(request);
+            System.out.println("UPDATE SENT");
         } catch (Exception e) {
             log.error(e);
             kafkaTemplate.send(config.kafkaConfigInfo().updatesTopic().name() + "_dlq", request.id(), request);

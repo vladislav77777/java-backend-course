@@ -22,7 +22,7 @@ public class LinkUpdateService {
 
                 bot.execute(new SendMessage(
                     tgChatId,
-                    "The [link] (%s) was updated:\n%s".formatted(
+                    "\uD83D\uDD14 The [link] (%s) was updated:\n%s".formatted(
                         request.url().toString(),
                         request.description()
                     )

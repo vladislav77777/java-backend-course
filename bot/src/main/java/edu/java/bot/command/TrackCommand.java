@@ -22,7 +22,7 @@ public class TrackCommand implements Command {
 
     @Override
     public String description() {
-        return "Start tracking a link";
+        return "Start tracking a link \uD83D\uDD0D";
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TrackCommand implements Command {
                         .formatted(response.getBody().url());
                 }
 
-                return "Something went wrong :(";
+                return "Something went wrong  \uD83D\uDE1E";
             })
             .onErrorResume(
                 ApiErrorResponseException.class,

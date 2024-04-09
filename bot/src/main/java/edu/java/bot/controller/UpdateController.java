@@ -16,6 +16,7 @@ public class UpdateController {
 
     @PostMapping
     public void postUpdates(@RequestBody LinkUpdateRequest request) {
+        System.out.println("Controller received a request");
         service.sendUpdateNotification(request);
     }
 }

@@ -13,25 +13,24 @@ import edu.java.bot.command.UserMessageProcessor;
 import edu.java.bot.configuration.ApplicationConfig;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @EnableConfigurationProperties(ApplicationConfig.class)
+@RequiredArgsConstructor
 public class TelegramBOT implements Bot {
 
     private TelegramBot telegramBot;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramBOT.class);
 
-    @Autowired
-    private ApplicationConfig applicationConfig;
+    private final ApplicationConfig applicationConfig;
 
-    @Autowired
-    private UserMessageProcessor messageProcessor;
+    private final UserMessageProcessor messageProcessor;
 
     @Override
     public <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(BaseRequest<T, R> request) {
