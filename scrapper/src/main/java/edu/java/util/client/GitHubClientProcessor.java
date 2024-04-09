@@ -41,9 +41,9 @@ public class GitHubClientProcessor extends BaseClientProcessor {
                 .mapNotNull(response -> {
                     if (response.getLast().getUpdatedAt().isAfter(link.getLastUpdatedAt())) {
 
-                        return "\n✅Repository updated " + "by "
+                        return "\n✅ Repository updated " + "by "
                             + response.getLast().getUser().login() + " at "
-                            + response.getLast().getUpdatedAt().format(formatter) + "\n\n\uD83D\uDCE9Message: "
+                            + response.getLast().getUpdatedAt().format(formatter) + "\n\n\uD83D\uDCE9 Message: "
                             + response.getLast().getBody();
                     }
 
