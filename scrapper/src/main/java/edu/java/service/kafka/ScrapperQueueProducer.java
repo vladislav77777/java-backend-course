@@ -14,6 +14,5 @@ public class ScrapperQueueProducer implements LinkUpdateService {
     @Override
     public void sendUpdate(LinkUpdateRequest request) {
         kafkaTemplate.send(config.kafkaConfigInfo().updatesTopic().name(), request.id(), request);
-        System.out.println("SENDING UPDATE");
     }
 }
