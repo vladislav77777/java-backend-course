@@ -49,7 +49,7 @@ public class TrackCommand implements Command {
             .map(response -> {
                 if (HttpStatus.OK.equals(response.getStatusCode())
                     && response.getBody() != null) {
-                    return "Tracking started for the link: %s"
+                    return "☑\uFE0F Tracking started for the link: %s"
                         .formatted(response.getBody().url());
                 }
 

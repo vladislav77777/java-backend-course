@@ -49,7 +49,7 @@ public class UntrackCommand implements Command {
             .map(response -> {
                 if (HttpStatus.OK.equals(response.getStatusCode())
                     && response.getBody() != null) {
-                    return "Tracking stopped for the link: %s"
+                    return "\uD83D\uDEAB Tracking stopped for the link: %s"
                         .formatted(response.getBody().url());
                 }
 
