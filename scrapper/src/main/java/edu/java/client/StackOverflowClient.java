@@ -14,7 +14,6 @@ public class StackOverflowClient extends Client {
         this.retryTemplate = retryTemplate;
     }
 
-
     public Mono<StackOverflowResponse> fetchQuestion(long questionId) {
         return retryTemplate.execute(context -> Objects.requireNonNull(webClient.get()
             .uri(

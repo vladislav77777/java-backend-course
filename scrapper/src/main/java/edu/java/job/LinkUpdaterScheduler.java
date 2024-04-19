@@ -18,6 +18,7 @@ import reactor.core.scheduler.Schedulers;
 @Slf4j
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler {
+
     private final List<BaseClientProcessor> clientProcessors;
     private final LinkService linkService;
     private final LinkUpdateService linkUpdateService;
