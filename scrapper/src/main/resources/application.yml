@@ -73,8 +73,38 @@ bucket4j:
               refill-speed: interval
 server:
   port: 8080
-# http://localhost:8080/swagger-ui/index.html
+
+management:
+  info:
+    env:
+      enabled: true
+  server:
+    port: 8081
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health,info,prometheus
+      path-mapping:
+        prometheus: metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+info:
+  name: "Link Tracker"
+  description: "App for tracking links in GitHub and StackOverflow via Telegram bot"
+  author: "Vladislav Grigorev"
+  app:
+    encoding: "UTF-8"
+    java:
+      source: "21"
+      target: "21"
+
+
 logging:
   config: classpath:log4j2-plain.xml
   level:
     org.springframework.jdbc.core: DEBUG
+
+# http://localhost:8080/swagger-ui/index.html
