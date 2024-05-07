@@ -16,3 +16,7 @@
 
 Для работы требуется БД `PostgreSQL`. Присутствует опциональная зависимость на `Kafka`.
 Используется `Prometheus`,`Grafana` для сбора и визуализации метрик.
+
+
+![image](https://github.com/vladislav77777/java-backend-course/assets/88504619/7aae0104-1f68-4a0f-bff2-034a53a81efe)
+![image](https://github.com/vladislav77777/java-backend-course/assets/88504619/01c4bd8d-ec66-4e69-9b6a-306ffc08f99a)
