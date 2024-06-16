@@ -24,7 +24,6 @@ public class UserMessageProcessorImpl implements UserMessageProcessor {
 
     @Override
     public SendMessage process(Update update) {
-
         String messageText = update.message().text();
 
         unknownText = "Unknown command. Use /help for command list.";

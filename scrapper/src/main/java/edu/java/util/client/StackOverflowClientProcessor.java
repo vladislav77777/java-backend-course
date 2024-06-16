@@ -39,7 +39,7 @@ public class StackOverflowClientProcessor extends BaseClientProcessor {
                 .mapNotNull(response -> {
                     StackOverflowResponse.ItemResponse first = response.items().getFirst();
                     if (first.lastActivityDate().isAfter(link.getLastUpdatedAt())) {
-                        return "\nQuestion updated " + "by "
+                        return "\n✅ Question updated " + "by "
                             + first.owner().displayName() + " at "
                             + first.creationDate().format(formatter) + "\n";
                     }

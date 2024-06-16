@@ -20,7 +20,7 @@ public class HelpCommand implements Command {
 
     @Override
     public String description() {
-        return "Show the list of available commands";
+        return "Show the list of available commands 📜";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class HelpCommand implements Command {
     }
 
     @NotNull private String getStringBuilder() {
-        StringBuilder message = new StringBuilder("Available commands:\n");
+        StringBuilder message = new StringBuilder("Available commands:\n\n");
         // Add descriptions for each command
         commands.forEach(command -> message.append("%s - %s\n".formatted(
             command.command(),

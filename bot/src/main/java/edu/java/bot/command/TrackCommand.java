@@ -22,7 +22,7 @@ public class TrackCommand implements Command {
 
     @Override
     public String description() {
-        return "Start tracking a link";
+        return "Start tracking a link \uD83D\uDD0D";
     }
 
     @Override
@@ -49,11 +49,11 @@ public class TrackCommand implements Command {
             .map(response -> {
                 if (HttpStatus.OK.equals(response.getStatusCode())
                     && response.getBody() != null) {
-                    return "Tracking started for the link: %s"
+                    return "☑\uFE0F Tracking started for the link: %s"
                         .formatted(response.getBody().url());
                 }
 
-                return "Something went wrong :(";
+                return "Something went wrong  \uD83D\uDE1E";
             })
             .onErrorResume(
                 ApiErrorResponseException.class,

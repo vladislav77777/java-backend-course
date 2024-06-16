@@ -20,7 +20,7 @@ public class StartCommand implements Command {
 
     @Override
     public String description() {
-        return "Register the user";
+        return "Register the user \uD83D\uDE80";
     }
 
     @Override
@@ -36,10 +36,10 @@ public class StartCommand implements Command {
             + client.registerChat(chat.id())
             .map(response -> {
                 if (response.getStatusCode().equals(HttpStatus.OK)) {
-                    return "You have been successfully registered!\n";
+                    return "You have been successfully registered!  ✅\n";
                 }
 
-                return "Something went wrong :(\n";
+                return "Something went wrong  \uD83D\uDE14\n";
             })
             .onErrorResume(
                 ApiErrorResponseException.class,

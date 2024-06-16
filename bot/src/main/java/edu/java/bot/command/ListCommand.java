@@ -25,7 +25,7 @@ public class ListCommand implements Command {
 
     @Override
     public String description() {
-        return "Show the list of tracked links";
+        return "Show the list of tracked links \uD83D\uDCDD";
     }
 
     @Override
@@ -41,13 +41,13 @@ public class ListCommand implements Command {
                 if (HttpStatus.OK.equals(response.getStatusCode())
                     && response.getBody() != null && response.getBody().links() != null) {
                     if (response.getBody().links().isEmpty()) {
-                        return "The list of tracked links is empty.";
+                        return "The list of tracked links is empty. 😕";
                     }
 
                     return buildListOfLinks(response.getBody().links());
                 }
 
-                return "Something went wrong :(";
+                return "Something went wrong. 😞";
             })
             .onErrorResume(
                 ApiErrorResponseException.class,
@@ -59,7 +59,7 @@ public class ListCommand implements Command {
     @NotNull private static String buildListOfLinks(List<LinkResponse> links) {
         List<String> urls = links.stream().map(linkResponse -> linkResponse.url().toString()).toList();
 
-        StringBuilder message = new StringBuilder("Tracked Links:\n");
+        StringBuilder message = new StringBuilder("Tracked Links:\n\n");
         for (int i = 0; i < urls.size(); i++) {
             message.append(i + 1).append(": ").append(urls.get(i)).append("\n");
         }

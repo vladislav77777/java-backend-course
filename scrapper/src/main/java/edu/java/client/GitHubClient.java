@@ -18,7 +18,7 @@ public class GitHubClient extends Client {
 
     public Mono<List<GitHubResponse>> getIssue(String owner, String repo, long issueNumber) {
         return retryTemplate.execute(context -> Objects.requireNonNull(webClient.get()
-            .uri("/repos/{owner}/{repo}/issues/{issueNumber}/comments", owner, repo, issueNumber)
+            .uri("/repos/{owner}/{repo}/issues/{issueNumber}/comments?per_page=100", owner, repo, issueNumber)
 //            .header(
 //                "Authorization",
 //                "token " + "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"

@@ -22,7 +22,7 @@ public class UntrackCommand implements Command {
 
     @Override
     public String description() {
-        return "Stop tracking a link";
+        return "Stop tracking a link \uD83D\uDEAB";
     }
 
     @Override
@@ -49,11 +49,11 @@ public class UntrackCommand implements Command {
             .map(response -> {
                 if (HttpStatus.OK.equals(response.getStatusCode())
                     && response.getBody() != null) {
-                    return "Tracking stopped for the link: %s"
+                    return "\uD83D\uDEAB Tracking stopped for the link: %s"
                         .formatted(response.getBody().url());
                 }
 
-                return "Something went wrong :(";
+                return "Something went wrong \uD83D\uDE1E";
             })
             .onErrorResume(
                 ApiErrorResponseException.class,
