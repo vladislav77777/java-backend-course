@@ -34,13 +34,13 @@ public class HelpCommandTest extends CommandTest {
 
     @Test
     public void assertThatDescriptionReturnedRightString() {
-        assertEquals("Show the list of available commands", helpCommand.description());
+        assertEquals("Show the list of available commands \uD83D\uDCDC", helpCommand.description());
     }
 
     @Test
     public void assertThatHandleReturnedRightString() {
         String expectedMessage =
-            "Available commands:\n/start - Register the user\n/list - Show the list of tracked links\n/track - Start tracking a link\n/untrack - Stop tracking a link\n";
+            "Available commands:\n\n/start - Register the user \uD83D\uDE80\n/list - Show the list of tracked links \uD83D\uDCDD\n/track - Start tracking a link \uD83D\uDD0D\n/untrack - Stop tracking a link \uD83D\uDEAB\n";
 
         assertEquals(expectedMessage, helpCommand.handle(update).getParameters().get("text"));
     }

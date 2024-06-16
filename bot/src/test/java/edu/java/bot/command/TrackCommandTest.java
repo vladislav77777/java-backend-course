@@ -37,7 +37,7 @@ public class TrackCommandTest extends CommandTest {
 
     @Test
     public void assertThatDescriptionReturnedRightString() {
-        assertEquals("Start tracking a link", trackCommand.description());
+        assertEquals("Start tracking a link \uD83D\uDD0D", trackCommand.description());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class TrackCommandTest extends CommandTest {
             .when(client).addLink(Mockito.any(), Mockito.any());
 
         assertEquals(
-            "Tracking started for the link: " + "https://www.tinkoff.ru",
+            "☑\uFE0F Tracking started for the link: " + "https://www.tinkoff.ru",
             trackCommand.handle(update).getParameters().get("text")
         );
 

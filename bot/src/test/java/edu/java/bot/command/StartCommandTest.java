@@ -33,7 +33,7 @@ public class StartCommandTest extends CommandTest {
 
     @Test
     public void assertThatDescriptionReturnedRightString() {
-        assertEquals("Register the user", startCommand.description());
+        assertEquals("Register the user \uD83D\uDE80", startCommand.description());
     }
 
     @Test

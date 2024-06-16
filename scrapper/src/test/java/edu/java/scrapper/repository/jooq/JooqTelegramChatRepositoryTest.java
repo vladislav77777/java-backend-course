@@ -29,6 +29,7 @@ public class JooqTelegramChatRepositoryTest extends IntegrationTest {
     public static void setJdbcAccessType(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () -> "jooq");
     }
+
     @Test
     @Transactional
     @Rollback

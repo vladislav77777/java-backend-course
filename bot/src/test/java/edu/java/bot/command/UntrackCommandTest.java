@@ -35,7 +35,7 @@ public class UntrackCommandTest extends CommandTest {
 
     @Test
     public void assertThatDescriptionReturnedRightString() {
-        assertEquals("Stop tracking a link", unTrackCommand.description());
+        assertEquals("Stop tracking a link \uD83D\uDEAB", unTrackCommand.description());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class UntrackCommandTest extends CommandTest {
         Mockito.doReturn(Mono.just(ResponseEntity.ok().body(new LinkResponse(0L, uri)))).when(client)
             .removeLink(Mockito.any(), Mockito.any());
         assertEquals(
-            "Tracking stopped for the link: https://www.tinkoff.ru",
+            "\uD83D\uDEAB Tracking stopped for the link: https://www.tinkoff.ru",
             unTrackCommand.handle(update).getParameters().get("text")
         );
     }

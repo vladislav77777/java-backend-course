@@ -40,7 +40,7 @@ class ListCommandTest extends CommandTest {
 
     @Test
     public void assertThatDescriptionReturnedRightString() {
-        assertEquals("Show the list of tracked links", listCommand.description());
+        assertEquals("Show the list of tracked links \uD83D\uDCDD", listCommand.description());
     }
 
     @Test
@@ -72,12 +72,12 @@ class ListCommandTest extends CommandTest {
             .when(client).getAllLinksForChat(chatId);
 
         SendMessage actualResult = listCommand.handle(update);
-        assertEquals("The list of tracked links is empty.", actualResult.getParameters().get("text"));
+        assertEquals("The list of tracked links is empty. \uD83D\uDE15", actualResult.getParameters().get("text"));
         assertEquals(chatId, actualResult.getParameters().get("chat_id"));
     }
 
     private String expectedResultBuilder() {
-        return String.join("\n", "Tracked Links:", "1: https://example.com", "2: https://example.org\n");
+        return String.join("\n", "Tracked Links:\n", "1: https://example.com", "2: https://example.org\n");
     }
 }
 
