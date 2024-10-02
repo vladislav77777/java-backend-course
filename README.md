@@ -3,19 +3,19 @@
 
 # Link Tracker
 
-ФИО: Григорьев Владислав Владимирович
+FULL name: Grigorev Vladislav Vladimirovich
 
-Приложение для отслеживания обновлений контента по ссылкам.
-При появлении новых событий отправляется уведомление в Telegram.
+An application for tracking content updates via links.
+When new events appear, a notification is sent to Telegram.
 
-Проект написан на `Java 21` с использованием `Spring Boot 3`.
+The project is written in `Java 21` using `Spring Boot 3'.
 
-Проект состоит из 2-х приложений:
+The project consists of 2 applications:
 * Bot
 * Scrapper
 
-Для работы требуется БД `PostgreSQL`. Присутствует опциональная зависимость на `Kafka`.
-Используется `Prometheus`,`Grafana` для сбора и визуализации метрик.
+The `PostgreSQL` database is required for operation. There is an optional dependency on `Kafka'.
+Prometheus and Grafana are used to collect and visualize metrics.
 
 
 ![image](https://github.com/vladislav77777/java-backend-course/assets/88504619/7aae0104-1f68-4a0f-bff2-034a53a81efe)
